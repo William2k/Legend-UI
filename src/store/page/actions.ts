@@ -1,5 +1,5 @@
 import AppState from "../state-model";
-import { Dispatch, Action } from "redux";
+import { Dispatch } from "redux";
 import { SetPageColour, RemovePageColour } from "./types";
 
 export enum PageActionTypes {
@@ -8,10 +8,13 @@ export enum PageActionTypes {
 }
 
 export const pageActions = {
-  setPageColour: (payload: string) => (dispatch: Dispatch, getState: () => AppState) => {
-    dispatch(<SetPageColour>{ payload});
+  setPageColour: (payload: string) => (
+    dispatch: Dispatch,
+    getState: () => AppState
+  ) => {
+    dispatch({ payload } as SetPageColour);
   },
   removePageColour: () => (dispatch: Dispatch, getState: () => AppState) => {
-    dispatch(<RemovePageColour>{});
+    dispatch({} as RemovePageColour);
   }
 };

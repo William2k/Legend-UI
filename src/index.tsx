@@ -8,7 +8,6 @@ import App from "./components/App";
 import "./index.scss";
 import initialiser from "./appInitialiser";
 import configureStore, { history } from "./store/configureStore";
-import { compose } from "redux";
 import AppState from "./store/state-model";
 
 initialiser();

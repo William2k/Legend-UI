@@ -1,7 +1,7 @@
 import { CurrentUserState, CurrentUserActions } from "./types";
 import { CurrentUserActionTypes } from "./actions";
 
-const initialState = <CurrentUserState>{
+const initialState = {
   isFetching: false,
   isPosting: false,
   isLoggedIn: false,
@@ -15,7 +15,7 @@ const initialState = <CurrentUserState>{
     isActive: false,
     settings: { routeAnimation: "FADE", theme: "" }
   }
-};
+} as CurrentUserState;
 
 export default (
   state = initialState,

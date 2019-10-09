@@ -46,26 +46,26 @@ export const currentUserActions = {
     const token = localStorage.getItem("JwtToken");
 
     if (!token) {
-      return dispatch(<GetUserCanceled>{});
+      return dispatch({} as GetUserCanceled);
     }
 
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-    dispatch(<SignInRequest>{});
+    dispatch({} as SignInRequest);
 
     try {
       const response = await axios.get("user/auth");
       const data = response.data;
-      dispatch(<SignInSuccess>{ payload: data });
+      dispatch({ payload: data } as SignInSuccess);
     } catch (error) {
-      dispatch(<SignInFailure>{});
+      dispatch({} as SignInFailure);
     }
   },
   signInUser: (payload: SignIn) => async (
     dispatch: Dispatch,
     getState: () => AppState
   ) => {
-    dispatch(<SignInRequest>{});
+    dispatch({} as SignInRequest);
 
     try {
       const response = await axios.post("account/signin", payload);
@@ -73,16 +73,16 @@ export const currentUserActions = {
 
       localStorage.setItem("JwtToken", data.token);
       axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
-      dispatch(<SignInSuccess>{ payload: data });
+      dispatch({ payload: data } as SignInSuccess);
       dispatch(push("/"));
     } catch (error) {
-      dispatch(<SignInFailure>{});
+      dispatch({} as SignInFailure);
     }
   },
   signOutUser: () => (dispatch: Dispatch, getState: () => AppState) => {
     localStorage.removeItem("JwtToken");
     axios.defaults.headers.common.Authorization = null;
-    dispatch(<SignOutSuccess>{});
+    dispatch({} as SignOutSuccess);
     dispatch(push("/"));
   },
   signUpUser: (payload: SignUp) => async (
@@ -91,34 +91,34 @@ export const currentUserActions = {
   ) => {
     if (payload.password !== payload.confirmPassword) {
       // will add a validator function to validate the password for complexity
-      return dispatch(<SignUpPasswordFailure>{});
+      return dispatch({} as SignUpPasswordFailure);
     }
 
     delete payload.confirmPassword;
     payload.settings = getState().currentUser.user.settings; // saves the default settings to user object
 
-    dispatch(<SignUpRequest>{});
+    dispatch({} as SignUpRequest);
 
     try {
       await axios.post("account/signup", payload);
 
-      dispatch(<SignUpSuccess>{});
+      dispatch({} as SignUpSuccess);
       dispatch(push("/account/signin"));
     } catch (error) {
-      dispatch(<SignUpFailure>{});
+      dispatch({} as SignUpFailure);
     }
   },
   saveSettings: (payload: UserSettings) => async (
     dispatch: Dispatch,
     getState: () => AppState
   ) => {
-    dispatch(<SaveSettingsRequest>{});
+    dispatch({} as SaveSettingsRequest);
 
     try {
       await axios.post(`user/settings`, payload);
-      dispatch(<SaveSettingsSuccess>{ payload });
+      dispatch({ payload } as SaveSettingsSuccess);
     } catch (error) {
-      dispatch(<SaveSettingsFailure>{});
+      dispatch({} as SaveSettingsFailure);
     }
   }
 };

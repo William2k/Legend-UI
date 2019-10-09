@@ -23,9 +23,9 @@ const configureStore = (initialState: AppState) => {
   if (
     isDevelopment &&
     typeof window !== "undefined" &&
-    (<any>window).__REDUX_DEVTOOLS_EXTENSION__
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__
   ) {
-    enhancers.push((<any>window).__REDUX_DEVTOOLS_EXTENSION__());
+    enhancers.push((window as any).__REDUX_DEVTOOLS_EXTENSION__());
   }
 
   const rootReducer = combineReducers({

@@ -1,3 +1,7 @@
+interface Colours {
+  [key: string]: string;
+}
+
 export const backgroundColours = {
   default: "",
   red: "#dc233f",
@@ -6,4 +10,4 @@ export const backgroundColours = {
   brown: "#b13613",
   dark: "#0e0e0e",
   light: "#ababab"
-};
+} as Colours;
