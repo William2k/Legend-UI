@@ -51,21 +51,26 @@ export const currentUserActions = {
 
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-    dispatch({} as SignInRequest);
+    dispatch({ type: CurrentUserActionTypes.SIGNIN_REQUEST } as SignInRequest);
 
     try {
       const response = await axios.get("user/auth");
       const data = response.data;
-      dispatch({ payload: data } as SignInSuccess);
+      dispatch({
+        type: CurrentUserActionTypes.SIGNIN_SUCCESS,
+        payload: data
+      } as SignInSuccess);
     } catch (error) {
-      dispatch({} as SignInFailure);
+      dispatch({
+        type: CurrentUserActionTypes.SIGNIN_FAILURE
+      } as SignInFailure);
     }
   },
   signInUser: (payload: SignIn) => async (
     dispatch: Dispatch,
     getState: () => AppState
   ) => {
-    dispatch({} as SignInRequest);
+    dispatch({ type: CurrentUserActionTypes.SIGNIN_REQUEST } as SignInRequest);
 
     try {
       const response = await axios.post("account/signin", payload);
@@ -73,16 +78,23 @@ export const currentUserActions = {
 
       localStorage.setItem("JwtToken", data.token);
       axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
-      dispatch({ payload: data } as SignInSuccess);
+      dispatch({
+        type: CurrentUserActionTypes.SIGNIN_SUCCESS,
+        payload: data
+      } as SignInSuccess);
       dispatch(push("/"));
     } catch (error) {
-      dispatch({} as SignInFailure);
+      dispatch({
+        type: CurrentUserActionTypes.SIGNIN_FAILURE
+      } as SignInFailure);
     }
   },
   signOutUser: () => (dispatch: Dispatch, getState: () => AppState) => {
     localStorage.removeItem("JwtToken");
     axios.defaults.headers.common.Authorization = null;
-    dispatch({} as SignOutSuccess);
+    dispatch({
+      type: CurrentUserActionTypes.SIGNOUT_SUCCESS
+    } as SignOutSuccess);
     dispatch(push("/"));
   },
   signUpUser: (payload: SignUp) => async (
@@ -91,34 +103,47 @@ export const currentUserActions = {
   ) => {
     if (payload.password !== payload.confirmPassword) {
       // will add a validator function to validate the password for complexity
-      return dispatch({} as SignUpPasswordFailure);
+      return dispatch({
+        type: CurrentUserActionTypes.SIGNUP_PASSWORD_FAILURE
+      } as SignUpPasswordFailure);
     }
 
     delete payload.confirmPassword;
     payload.settings = getState().currentUser.user.settings; // saves the default settings to user object
 
-    dispatch({} as SignUpRequest);
+    dispatch({ type: CurrentUserActionTypes.SIGNUP_REQUEST } as SignUpRequest);
 
     try {
       await axios.post("account/signup", payload);
 
-      dispatch({} as SignUpSuccess);
+      dispatch({
+        type: CurrentUserActionTypes.SIGNUP_SUCCESS
+      } as SignUpSuccess);
       dispatch(push("/account/signin"));
     } catch (error) {
-      dispatch({} as SignUpFailure);
+      dispatch({
+        type: CurrentUserActionTypes.SIGNUP_FAILURE
+      } as SignUpFailure);
     }
   },
   saveSettings: (payload: UserSettings) => async (
     dispatch: Dispatch,
     getState: () => AppState
   ) => {
-    dispatch({} as SaveSettingsRequest);
+    dispatch({
+      type: CurrentUserActionTypes.SAVE_SETTINGS_REQUEST
+    } as SaveSettingsRequest);
 
     try {
       await axios.post(`user/settings`, payload);
-      dispatch({ payload } as SaveSettingsSuccess);
+      dispatch({
+        type: CurrentUserActionTypes.SAVE_SETTINGS_SUCCESS,
+        payload
+      } as SaveSettingsSuccess);
     } catch (error) {
-      dispatch({} as SaveSettingsFailure);
+      dispatch({
+        type: CurrentUserActionTypes.SAVE_SETTINGS_FAILURE
+      } as SaveSettingsFailure);
     }
   }
 };

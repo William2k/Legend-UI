@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { maxHeightExpand } from "../_Shared/animations";
 import AppState from "../../store/state-model";
-import { SignOutRequest } from "../../store/currentUser/types";
+import { currentUserActions } from "../../store/currentUser/actions";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -62,13 +62,13 @@ const Nav: React.FC = () => {
   const logout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    dispatch({} as SignOutRequest);
+    dispatch(currentUserActions.signOutUser());
   };
 
   return (
     <Navigation className="navbar navbar-expand-lg navbar-dark position-fixed">
       <NavLink to="/" className="navbar-brand">
-        MiX App
+        Legend
       </NavLink>
 
       <div className="collpase navbar-collapse">
@@ -76,26 +76,21 @@ const Nav: React.FC = () => {
           {currentUser.isLoggedIn ? (
             <React.Fragment>
               <NavItem>
-                <NavLink to="/apps" className="nav-link">
-                  Apps
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/settings" className="nav-link">
-                  Settings
+                <NavLink to="/account" className="nav-link">
+                  Account
                 </NavLink>
               </NavItem>
             </React.Fragment>
           ) : (
             <React.Fragment>
               <NavItem>
-                <NavLink to="/account/login" className="nav-link">
-                  Login
+                <NavLink to="/account/signin" className="nav-link">
+                  Signin
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/account/register" className="nav-link">
-                  Register
+                <NavLink to="/account/signup" className="nav-link">
+                  Signup
                 </NavLink>
               </NavItem>
             </React.Fragment>

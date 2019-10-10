@@ -6,8 +6,8 @@ import { fadeIn } from "../animations";
 import { backgroundColours } from "../../../global/colours";
 import AppState from "../../../store/state-model";
 import { UserSettings } from "../../../global/models/user-models";
-import { GetUserRequest } from "../../../store/currentUser/types";
 import { RouteProps } from "react-router";
+import { currentUserActions } from "../../../store/currentUser/actions";
 
 interface MainProps {
   settings: UserSettings;
@@ -66,9 +66,9 @@ const MainWrapper: React.FC<RouteProps> = (props) => {
   const page = state.page;
 
   useEffect(() => {
-    dispatch({} as GetUserRequest);
-
-    return () => {};
+    dispatch(currentUserActions.getUser());
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -26,10 +26,11 @@ const App: React.FC = () => {
         <TransitionGroup component={null}>
           <CSSTransition key={location.key} timeout={500} classNames="page">
             <Switch location={location}>
-              <Route path="/" component={Home} />
+              <Route exact path="/" component={Home} />
+              <PrivateRoute exact path="/account" component={Account} authorised={currentUser.isLoggedIn}/>
               <Route path="/account/signin" component={SignIn} />
               <Route path="/account/signup" component={SignUp} />
-              <PrivateRoute path="/account" component={Account} authorised={currentUser.isLoggedIn}/>
+
             </Switch>
           </CSSTransition>
         </TransitionGroup>
