@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
+import { RouteProps } from "react-router";
 
 import { fadeIn } from "../animations";
 import { backgroundColours } from "../../../global/colours";
-import AppState from "../../../store/state-model";
 import { UserSettings } from "../../../global/models/user-models";
-import { RouteProps } from "react-router";
 import { currentUserActions } from "../../../store/currentUser/actions";
+import { getUserSettingsSelector } from "../../../store/currentUser/selectors";
+import { getPageSelector } from "../../../store/page/selector";
 
 interface MainProps {
   settings: UserSettings;
@@ -60,10 +61,8 @@ const Main = styled.div<MainProps>`
 
 const MainWrapper: React.FC<RouteProps> = (props) => {
   const dispatch = useDispatch();
-  const state = useSelector((state: AppState) => state);
-
-  const settings = state.currentUser.user.settings;
-  const page = state.page;
+  const settings = useSelector(getUserSettingsSelector);
+  const page = useSelector(getPageSelector);
 
   useEffect(() => {
     dispatch(currentUserActions.getUser());

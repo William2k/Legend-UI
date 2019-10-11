@@ -10,7 +10,6 @@ export interface CurrentUserState {
   isFetching: boolean;
   isPosting: boolean;
   isLoggedIn: boolean;
-  token: string;
   user: FullUser;
 }
 

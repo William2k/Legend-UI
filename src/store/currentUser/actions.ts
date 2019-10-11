@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { push } from "connected-react-router";
-import { SignIn, SignUp, UserSettings } from "../../global/models/user-models";
+import { SignIn, SignUp, UserSettings, UserResponseWithToken, UserResponse } from "../../global/models/user-models";
 import { Dispatch } from "redux";
 import AppState from "../state-model";
 import {
@@ -46,7 +46,9 @@ export const currentUserActions = {
     const token = localStorage.getItem("JwtToken");
 
     if (!token) {
-      return dispatch({} as GetUserCanceled);
+      return dispatch({
+        type: CurrentUserActionTypes.GETUSER_CANCELED
+      } as GetUserCanceled);
     }
 
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -54,7 +56,7 @@ export const currentUserActions = {
     dispatch({ type: CurrentUserActionTypes.SIGNIN_REQUEST } as SignInRequest);
 
     try {
-      const response = await axios.get("user/auth");
+      const response = await axios.get("account/authenticate")  as AxiosResponse<UserResponse>;
       const data = response.data;
       dispatch({
         type: CurrentUserActionTypes.SIGNIN_SUCCESS,
@@ -73,14 +75,14 @@ export const currentUserActions = {
     dispatch({ type: CurrentUserActionTypes.SIGNIN_REQUEST } as SignInRequest);
 
     try {
-      const response = await axios.post("account/signin", payload);
+      const response = await axios.post("account/signin", payload) as AxiosResponse<UserResponseWithToken>;
       const data = response.data;
 
       localStorage.setItem("JwtToken", data.token);
       axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
       dispatch({
         type: CurrentUserActionTypes.SIGNIN_SUCCESS,
-        payload: data
+        payload: data.user
       } as SignInSuccess);
       dispatch(push("/"));
     } catch (error) {
@@ -100,7 +102,7 @@ export const currentUserActions = {
   signUpUser: (payload: SignUp) => async (
     dispatch: Dispatch,
     getState: () => AppState
-  ) => {
+  ) => { debugger;
     if (payload.password !== payload.confirmPassword) {
       // will add a validator function to validate the password for complexity
       return dispatch({

@@ -11,8 +11,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 
 import { maxHeightExpand } from "../_Shared/animations";
-import AppState from "../../store/state-model";
 import { currentUserActions } from "../../store/currentUser/actions";
+import { getUserSelector, getCurrentUserSelector } from "../../store/currentUser/selectors";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -57,7 +57,8 @@ const DropDownMenuElem = styled(DropdownMenu)`
 
 const Nav: React.FC = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: AppState) => state.currentUser);
+  const currentUser = useSelector(getCurrentUserSelector);
+  const user = useSelector(getUserSelector)
 
   const logout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -100,7 +101,7 @@ const Nav: React.FC = () => {
           <LoggedIn className="list-unstyled">
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-                Logged in as {currentUser.user.username}
+                Logged in as {user.username}
               </DropdownToggle>
               <DropDownMenuElem right>
                 <DropdownItem>Placeholder</DropdownItem>

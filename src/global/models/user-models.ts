@@ -23,6 +23,11 @@ export interface UserResponse {
   isActive: boolean;
 }
 
+export interface UserResponseWithToken {
+  user: UserResponse;
+  token: string;
+}
+
 export interface FullUser extends UserResponse {
   settings: UserSettings;
 }

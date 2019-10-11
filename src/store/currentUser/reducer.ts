@@ -5,7 +5,6 @@ const initialState = {
   isFetching: false,
   isPosting: false,
   isLoggedIn: false,
-  token: "",
   user: {
     username: "",
     firstName: "",
@@ -30,7 +29,7 @@ export default (
     case CurrentUserActionTypes.SIGNIN_SUCCESS:
       return {
         ...state,
-        ...action.payload,
+        user: { ...action.payload, settings: state.user.settings },
         isLoggedIn: true,
         isFetching: false
       };
