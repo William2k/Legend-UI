@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useRef } from "react";
+import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 import {
   UncontrolledDropdown,
@@ -9,10 +9,15 @@ import {
   NavItem
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import { maxHeightExpand } from "../_Shared/animations";
 import { currentUserActions } from "../../store/currentUser/actions";
-import { getUserSelector, getCurrentUserSelector } from "../../store/currentUser/selectors";
+import {
+  getUserSelector,
+  getCurrentUserSelector
+} from "../../store/currentUser/selectors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -58,7 +63,12 @@ const DropDownMenuElem = styled(DropdownMenu)`
 const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUserSelector);
-  const user = useSelector(getUserSelector)
+  const user = useSelector(getUserSelector);
+  const searchInput = useRef(null);
+
+  const search = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
 
   const logout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -97,6 +107,12 @@ const Nav: React.FC = () => {
             </React.Fragment>
           )}
         </ul>
+        <form onSubmit={search}>
+          <input type="search" ref={searchInput} />
+          <button type="submit">
+            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+          </button>
+        </form>
         {currentUser.isLoggedIn && (
           <LoggedIn className="list-unstyled">
             <UncontrolledDropdown nav inNavbar>
@@ -104,7 +120,9 @@ const Nav: React.FC = () => {
                 Logged in as {user.username}
               </DropdownToggle>
               <DropDownMenuElem right>
-                <DropdownItem>Placeholder</DropdownItem>
+                <DropdownItem>
+                  <Link to="/account"> Account </Link>
+                </DropdownItem>
 
                 <button className="logout-btn btn btn-warning" onClick={logout}>
                   Logout

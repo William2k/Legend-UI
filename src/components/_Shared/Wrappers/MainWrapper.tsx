@@ -9,6 +9,7 @@ import { UserSettings } from "../../../global/models/user-models";
 import { currentUserActions } from "../../../store/currentUser/actions";
 import { getUserSettingsSelector } from "../../../store/currentUser/selectors";
 import { getPageSelector } from "../../../store/page/selector";
+import MainPanel from "../../MainPanel";
 
 interface MainProps {
   settings: UserSettings;
@@ -16,6 +17,7 @@ interface MainProps {
 }
 
 const Main = styled.div<MainProps>`
+display: flex;
   position: relative;
   min-width: 100%;
   min-height: 100vh;
@@ -30,18 +32,18 @@ const Main = styled.div<MainProps>`
   ${({ settings }) =>
     settings.routeAnimation === "FADE" &&
     `
-    > .page-enter {
+    > .page-content .page-enter {
         opacity: 0.01;
     }
-    > .page-enter.page-enter-active {
+    > .page-content .page-enter.page-enter-active {
         opacity: 1;
         transition: opacity 300ms ease-in;
         position: absolute;
     }
-    > .page-exit {
+    > .page-content .page-exit {
         opacity: 1;
     }
-    > .page-exit.page-exit-active {
+    > .page-content .page-exit.page-exit-active {
         opacity: 0.01;
         transition: opacity 300ms ease-in;
         height: 100vh;
@@ -50,32 +52,40 @@ const Main = styled.div<MainProps>`
   ${({ settings }) =>
     settings.routeAnimation === "SLIDE" &&
     `
-    > .page-enter {
+    > .page-content .page-enter {
         animation: slideInRight 200ms forwards;
     }
-    > .page-exit {
+    > .page-content .page-exit {
         animation: slideOutRight 200ms forwards;
     }
     `}
+
+    .page-content{
+      flex-basis: 75%
+    }
+
+    .main-panel{
+      flex-basis: 35%;
+    }
 `;
 
-const MainWrapper: React.FC<RouteProps> = (props) => {
+const MainWrapper: React.FC<RouteProps> = props => {
   const dispatch = useDispatch();
   const settings = useSelector(getUserSettingsSelector);
   const page = useSelector(getPageSelector);
 
   useEffect(() => {
     dispatch(currentUserActions.getUser());
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Main
-      settings={settings}
-      bgColour={page.bgColour}
-    >
-      {props.children}
+    <Main settings={settings} bgColour={page.bgColour}>
+      <div className="page-content">{props.children}</div>
+      <div className="main-panel">
+        <MainPanel />
+      </div>
     </Main>
   );
 };
