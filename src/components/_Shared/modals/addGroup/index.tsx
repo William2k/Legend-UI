@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import Axios from "axios";
+import Axios, {AxiosResponse} from "axios";
+import { push } from "connected-react-router";
+import { useDispatch } from "react-redux";
 
-import { AddGroup } from "../../../global/models/group-models";
-import useForm from "../hooks/useForm";
+import { AddGroup } from "../../../../global/models/group-models";
+import useForm from "../../hooks/useForm";
 import styles from "./index.module.scss";
+import { GenericHttpError } from "../../../../global/models/error-models";
 
 interface Props {
   showModal: boolean;
@@ -12,15 +15,33 @@ interface Props {
 }
 
 const AddGroupModal: React.FC<Props> = props => {
+  const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
   const addGroupSubmit = async () => {
-    if(!values.name) {
-        return;
+    setErrorMessage("");
+
+    if (!values.name) {
+      setErrorMessage("Group Name required");
+
+      return;
     }
+
+    setSubmitting(true);
 
     try {
       await Axios.post("/group", values);
+
+      dispatch(push(`/g/${values.name}`));
     } catch (error) {
-      console.log("failed to add group");
+      if (error && error.response) {
+        const response = error.response as AxiosResponse<GenericHttpError>;
+
+        setErrorMessage(response.data.message);
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -33,11 +54,15 @@ const AddGroupModal: React.FC<Props> = props => {
   );
 
   return (
-    <Modal className={styles.addGroup} isOpen={props.showModal} toggle={props.toggle}>
+    <Modal
+      className={styles.addGroup}
+      isOpen={props.showModal}
+      toggle={props.toggle}
+    >
       <ModalHeader toggle={props.toggle}>Add Group</ModalHeader>
       <ModalBody>
         <form id="add-group-form" onSubmit={handleSubmit}>
-          <div className="form-group">
+          <fieldset className="form-group">
             <label className="col-form-label" htmlFor="name">
               Group Name
             </label>
@@ -49,9 +74,9 @@ const AddGroupModal: React.FC<Props> = props => {
               onChange={handleChange}
               value={values.name}
             />
-          </div>
+          </fieldset>
 
-          <div className="form-group">
+          <fieldset className="form-group">
             <label className="col-form-label" htmlFor="description">
               Group Description
             </label>
@@ -63,18 +88,19 @@ const AddGroupModal: React.FC<Props> = props => {
               onChange={handleChange}
               value={values.description}
             />
-          </div>
+          </fieldset>
 
-          <div className="form-group">
+          <fieldset className="form-group">
             <label className="col-form-label" htmlFor="tags">
               Group Tags
             </label>
             <input id="tags" className="form-control" type="text" />
-          </div>
+          </fieldset>
         </form>
       </ModalBody>
       <ModalFooter>
-        <Button form="add-group-form" color="primary" type="submit">
+        <div className={styles.errorMessage}>{errorMessage}</div>
+        <Button disabled={submitting} form="add-group-form" color="primary" type="submit">
           Create Group
         </Button>
         <Button color="secondary" onClick={props.toggle}>

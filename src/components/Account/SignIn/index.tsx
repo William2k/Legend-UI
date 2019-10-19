@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import { Spinner } from "../../_Shared/miniComponents";
-import { Container } from "../../_Shared/containerStyles";
 import { currentUserActions } from "../../../store/currentUser/actions";
 import { SignIn } from "../../../global/models/user-models";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +12,7 @@ interface ValidationProps {
 }
 
 const SigninForm = styled.form`
+  width: 100%;
   margin: 10% auto;
   padding: 5%;
   background-color: #687b8c;
@@ -52,12 +52,11 @@ const Signin: React.FC = () => {
   };
 
   return (
-    <Container>
       <SigninForm className="login-form" onSubmit={formSubmit}>
         <div className="col-sm-12">
           <h1>Login</h1>
         </div>
-        <div className="form-group">
+        <fieldset className="form-group">
           <label className="control-label col-md-3" htmlFor="UserName">
             Username:
           </label>
@@ -72,8 +71,8 @@ const Signin: React.FC = () => {
               onChange={e => setUsername(e.target.value)}
             />
           </div>
-        </div>
-        <div className="form-group">
+        </fieldset>
+        <fieldset className="form-group">
           <label className="control-label col-md-3" htmlFor="Password">
             Password:
           </label>
@@ -88,8 +87,8 @@ const Signin: React.FC = () => {
               onChange={e => setPassword(e.target.value)}
             />
           </div>
-        </div>
-        <div className="form-group form-check">
+        </fieldset>
+        <fieldset className="form-group form-check">
           <label className="form-check-label col-md-12" htmlFor="RememberMe">
             <input
               id="RememberMe"
@@ -101,7 +100,7 @@ const Signin: React.FC = () => {
             />
             Remember
           </label>
-        </div>
+        </fieldset>
         <div className="col-md-12">
           <button className="btn-primary btn-lg btn">
             Submit
@@ -115,7 +114,6 @@ const Signin: React.FC = () => {
           </ValidationDiv>
         </div>
       </SigninForm>
-    </Container>
   );
 };
 

@@ -10,13 +10,14 @@ import { currentUserActions } from "../../../store/currentUser/actions";
 import { getUserSettingsSelector } from "../../../store/currentUser/selectors";
 import { getPageSelector } from "../../../store/page/selector";
 import MainPanel from "../../MainPanel";
+import { Container } from "../containerStyles";
 
 interface MainProps {
   settings: UserSettings;
   bgColour: string;
 }
 
-const Main = styled.div<MainProps>`
+const Main = styled(Container)<MainProps>`
 display: flex;
   position: relative;
   min-width: 100%;
@@ -82,10 +83,10 @@ const MainWrapper: React.FC<RouteProps> = props => {
 
   return (
     <Main settings={settings} bgColour={page.bgColour}>
-      <div className="page-content">{props.children}</div>
-      <div className="main-panel">
+      <main className="page-content">{props.children}</main>
+      <article className="main-panel">
         <MainPanel />
-      </div>
+      </article>
     </Main>
   );
 };

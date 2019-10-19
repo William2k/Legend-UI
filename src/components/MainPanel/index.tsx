@@ -2,12 +2,11 @@ import React from "react";
 import TrendingGroupsPane from "./TrendingGroupsPane";
 import RecentPostsPane from "./RecentPostsPane";
 import MainPane from "./MainPane";
-import { Container } from "../_Shared/containerStyles";
-import styles from "./panel.module.scss";
+import styles from "./index.module.scss";
 
 const MainPanel: React.FC = () => {
   return (
-    <Container>
+    <React.Fragment>
       <div className={styles.pane}>
         <TrendingGroupsPane />
       </div>
@@ -19,7 +18,7 @@ const MainPanel: React.FC = () => {
       <div className={styles.pane}>
         <MainPane />
       </div>
-    </Container>
+    </React.Fragment>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import AddGroupModal from "../_Shared/groups";
+import AddGroupModal from "../_Shared/modals/addGroup";
 import { getCurrentUserSelector } from "../../store/currentUser/selectors";
 
 const MainPane: React.FC = () => {
