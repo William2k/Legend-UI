@@ -6,3 +6,9 @@ export interface GroupResponse {
     subscriberCount: number;
     tags: string[];
   }
+
+  export interface AddGroup {
+    name: string;
+    description: string;
+    tags: string[];
+  }

@@ -102,7 +102,7 @@ export const currentUserActions = {
   signUpUser: (payload: SignUp) => async (
     dispatch: Dispatch,
     getState: () => AppState
-  ) => { debugger;
+  ) => {
     if (payload.password !== payload.confirmPassword) {
       // will add a validator function to validate the password for complexity
       return dispatch({
