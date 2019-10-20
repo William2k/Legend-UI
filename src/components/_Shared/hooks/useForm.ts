@@ -11,16 +11,24 @@ const useForm = <T>(initialValues: T, callback: () => void) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.persist();
+    setValue(event.target.name, event.target.value);
+  };
+
+  const setValue = (name: string, value: string) => {
     setValues(values => ({
       ...values,
-      [event.target.name]: event.target.value
+      [name]: value
     }));
   };
+
+  const resetValues = () => setValues(initialValues);
 
   return {
     handleChange,
     handleSubmit,
-    values
+    values,
+    setValue, 
+    resetValues
   };
 };
 

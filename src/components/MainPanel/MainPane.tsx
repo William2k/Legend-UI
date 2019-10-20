@@ -12,6 +12,9 @@ const MainPane: React.FC = () => {
     setShowAddGroup(!showAddGroup);
   };
 
+  const openAddGroup = () => setShowAddGroup(true);
+  const closeAddGroup = () => setShowAddGroup(false);
+
   const handleAddGroupClick = (e: React.MouseEvent) => {
     setShowAddGroup(true);
   };
@@ -29,7 +32,7 @@ const MainPane: React.FC = () => {
           >
             Create Group
           </button>
-          <AddGroupModal toggle={toggleShowAddGroup} showModal={showAddGroup} />{" "}
+          <AddGroupModal openModal={openAddGroup} closeModal={closeAddGroup} toggle={toggleShowAddGroup} showModal={showAddGroup} />{" "}
         </React.Fragment>
       )}
     </React.Fragment>
