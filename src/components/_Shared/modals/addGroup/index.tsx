@@ -3,14 +3,14 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Axios, { AxiosResponse } from "axios";
 import { push } from "connected-react-router";
 import { useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import { AddGroup } from "../../../../global/models/group-models";
 import useForm from "../../hooks/useForm";
 import styles from "./index.module.scss";
 import { GenericHttpError } from "../../../../global/models/error-models";
 import { Spinner } from "../../miniComponents";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faCross, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { arrayRemoveByIndex } from "../../../../global/helpers";
 
 interface Props {

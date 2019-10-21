@@ -30,6 +30,7 @@ export enum CurrentUserActionTypes {
 
   SIGNOUT_REQUEST = "[SignOut] SignOut Request",
   SIGNOUT_SUCCESS = "[SignOut] SignOut Success",
+  AUTHENTICATION_FAILED = "[Authentication] Authentication Failed",
 
   GETUSER_REQUEST = "[GetUser] GetUser Request",
   GETUSER_FAILURE = "[GetUser] GetUser Failure",

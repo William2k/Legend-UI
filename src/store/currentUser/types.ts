@@ -44,6 +44,9 @@ export interface SignOutRequest
 export interface SignOutSuccess
   extends Action<CurrentUserActionTypes.SIGNOUT_SUCCESS> {}
 
+export interface AuthenticationFailed
+  extends Action<CurrentUserActionTypes.AUTHENTICATION_FAILED> {}
+
 export interface SignUpRequest
   extends Action<CurrentUserActionTypes.SIGNUP_REQUEST> {}
 
@@ -77,6 +80,7 @@ export type CurrentUserActions =
   | SignInFailure
   | SignOutRequest
   | SignOutSuccess
+  | AuthenticationFailed
   | SignUpRequest
   | SignUpSuccess
   | SignUpPasswordFailure

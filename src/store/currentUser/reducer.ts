@@ -38,6 +38,7 @@ export default (
         ...state,
         isFetching: false
       };
+    case CurrentUserActionTypes.AUTHENTICATION_FAILED:
     case CurrentUserActionTypes.SIGNOUT_SUCCESS: {
       return initialState;
     }

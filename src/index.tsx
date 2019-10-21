@@ -7,11 +7,8 @@ import "bootstrap/scss/bootstrap.scss";
 import * as serviceWorker from "./serviceWorker";
 import App from "./components/App";
 import "./index.scss";
-import initialiser from "./appInitialiser";
 import configureStore, { history } from "./store/configureStore";
 import AppState from "./store/state-model";
-
-initialiser();
 
 // get the application-wide store instance, prepopulating with state from the server where available.
 const initialState = (window as any).initialReduxState as AppState;

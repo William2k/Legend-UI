@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Nav from "./Nav";
 import MainWrapper from "./_Shared/wrappers/MainWrapper";
@@ -12,9 +12,19 @@ import SignIn from "./Account/SignIn";
 import SignUp from "./Account/SignUp";
 import { getLocationSelector } from "../store/router/selectors";
 import { getCurrentUserSelector } from "../store/currentUser/selectors";
-
+import initialiser from "../appInitialiser";
+import { currentUserActions } from "../store/currentUser/actions";
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    initialiser(dispatch);
+    dispatch(currentUserActions.getUser());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const location = useSelector(getLocationSelector);
   const currentUser = useSelector(getCurrentUserSelector);
 
@@ -26,7 +36,12 @@ const App: React.FC = () => {
           <CSSTransition key={location.key} timeout={500} classNames="page">
             <Switch location={location}>
               <Route exact path="/" component={Home} />
-              <PrivateRoute exact path="/account" component={Account} authorised={currentUser.isLoggedIn}/>
+              <PrivateRoute
+                exact
+                path="/account"
+                component={Account}
+                authorised={currentUser.isLoggedIn}
+              />
               <Route path="/account/signin" component={SignIn} />
               <Route path="/account/signup" component={SignUp} />
             </Switch>
