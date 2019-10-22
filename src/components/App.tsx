@@ -14,6 +14,11 @@ import { getLocationSelector } from "../store/router/selectors";
 import { getCurrentUserSelector } from "../store/currentUser/selectors";
 import initialiser from "../appInitialiser";
 import { currentUserActions } from "../store/currentUser/actions";
+import Group from "./Group";
+import { useConfig } from "../global/config";
+import Axios from "axios";
+
+Axios.defaults.baseURL = useConfig.apiBaseURL;
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -44,6 +49,7 @@ const App: React.FC = () => {
               />
               <Route path="/account/signin" component={SignIn} />
               <Route path="/account/signup" component={SignUp} />
+              <Route path="/g/:groupName" component={Group} />
             </Switch>
           </CSSTransition>
         </TransitionGroup>

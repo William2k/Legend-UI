@@ -41,6 +41,12 @@ const AddGroupModal: React.FC<Props> = props => {
       return;
     }
 
+    if(values.name.includes(" ")) {
+      setErrorMessage("Group name cannot include spaces");
+
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -104,7 +110,7 @@ const AddGroupModal: React.FC<Props> = props => {
     setTags(newTags);
   }
 
-  const handleTagKeyUp = (e: React.KeyboardEvent) => {
+  const handleTagKeyPress = (e: React.KeyboardEvent) => {
     if(e.key !== "Enter" || !(e.currentTarget as HTMLInputElement).value) {
       return;
     }
@@ -182,7 +188,7 @@ const AddGroupModal: React.FC<Props> = props => {
                 className="w-50"
                 name="tag"
                 type="text"
-                onKeyUp={handleTagKeyUp}
+                onKeyPress={handleTagKeyPress}
                 onChange={handleChange}
                 value={values.tag}
               />
