@@ -17,6 +17,7 @@ import { currentUserActions } from "../store/currentUser/actions";
 import Group from "./Group";
 import { useConfig } from "../global/config";
 import Axios from "axios";
+import GroupsViewer from "./Group/GroupsViewer";
 
 Axios.defaults.baseURL = useConfig.apiBaseURL;
 
@@ -40,7 +41,7 @@ const App: React.FC = () => {
         <TransitionGroup component={null}>
           <CSSTransition key={location.key} timeout={500} classNames="page">
             <Switch location={location}>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={GroupsViewer} />
               <PrivateRoute
                 exact
                 path="/account"

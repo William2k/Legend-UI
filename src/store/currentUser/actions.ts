@@ -1,6 +1,12 @@
-import axios, { AxiosResponse } from "axios";
+import Axios, { AxiosResponse } from "axios";
 import { push } from "connected-react-router";
-import { SignIn, SignUp, UserSettings, UserResponseWithToken, UserResponse } from "../../global/models/user-models";
+import {
+  SignIn,
+  SignUp,
+  UserSettings,
+  UserResponseWithToken,
+  UserResponse
+} from "../../global/models/user-models";
 import { Dispatch } from "redux";
 import AppState from "../state-model";
 import {
@@ -52,12 +58,14 @@ export const currentUserActions = {
       } as GetUserCanceled);
     }
 
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    Axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
     dispatch({ type: CurrentUserActionTypes.SIGNIN_REQUEST } as SignInRequest);
 
     try {
-      const response = await axios.get("account/authenticate")  as AxiosResponse<UserResponse>;
+      const response = (await Axios.get(
+        "account/authenticate"
+      )) as AxiosResponse<UserResponse>;
       const data = response.data;
       dispatch({
         type: CurrentUserActionTypes.SIGNIN_SUCCESS,
@@ -76,11 +84,14 @@ export const currentUserActions = {
     dispatch({ type: CurrentUserActionTypes.SIGNIN_REQUEST } as SignInRequest);
 
     try {
-      const response = await axios.post("account/signin", payload) as AxiosResponse<UserResponseWithToken>;
+      const response = (await Axios.post(
+        "account/signin",
+        payload
+      )) as AxiosResponse<UserResponseWithToken>;
       const data = response.data;
 
       localStorage.setItem("JwtToken", data.token);
-      axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+      Axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
       dispatch({
         type: CurrentUserActionTypes.SIGNIN_SUCCESS,
         payload: data.user
@@ -94,7 +105,7 @@ export const currentUserActions = {
   },
   signOutUser: () => (dispatch: Dispatch, getState: () => AppState) => {
     localStorage.removeItem("JwtToken");
-    axios.defaults.headers.common.Authorization = null;
+    Axios.defaults.headers.common.Authorization = null;
     dispatch({
       type: CurrentUserActionTypes.SIGNOUT_SUCCESS
     } as SignOutSuccess);
@@ -117,7 +128,7 @@ export const currentUserActions = {
     dispatch({ type: CurrentUserActionTypes.SIGNUP_REQUEST } as SignUpRequest);
 
     try {
-      await axios.post("account/signup", payload);
+      await Axios.post("account/signup", payload);
 
       dispatch({
         type: CurrentUserActionTypes.SIGNUP_SUCCESS
@@ -138,7 +149,7 @@ export const currentUserActions = {
     } as SaveSettingsRequest);
 
     try {
-      await axios.post(`user/settings`, payload);
+      await Axios.post(`user/settings`, payload);
       dispatch({
         type: CurrentUserActionTypes.SAVE_SETTINGS_SUCCESS,
         payload
