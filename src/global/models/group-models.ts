@@ -15,5 +15,7 @@ export interface AddGroup {
 
 export interface GroupPagination {
   limit: number;
-  subset: number;
+  lastCount: number;
+  initial: boolean;
+  asc: boolean;
 }

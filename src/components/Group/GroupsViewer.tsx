@@ -5,7 +5,7 @@ import Axios, { AxiosResponse } from "axios";
 
 const GroupsViewer: React.FC = () => {
   const [groups, setGroups] = useState([] as GroupResponse[]);
-  const [pagination, setPagination] = useState({limit: 30, subset: 1} as GroupPagination);
+  const [pagination, setPagination] = useState({limit: 30, lastCount: 0, initial: true, asc: false} as GroupPagination);
 
   useEffect(() => {
     (async() => {
