@@ -9,7 +9,7 @@ interface Props {
   group: GroupResponse;
 }
 
-const GroupListItem: React.FC<Props> = ({ group, ...rest }) => {
+const GroupListItem: React.FC<Props> = ({ group, ...props }) => {
   const dispatch = useDispatch();
 
   const openGroup = () => {
