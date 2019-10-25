@@ -33,6 +33,7 @@ const Group: React.FC<Props> = props => {
     description: "",
     isActive: false,
     postCount: 0,
+    dateCreated: "",
     subscriberCount: 0,
     tags: []
   } as GroupResponse);

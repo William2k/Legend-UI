@@ -4,6 +4,7 @@ export interface GroupResponse {
   isActive: boolean;
   postCount: number;
   subscriberCount: number;
+  dateCreated: string; 
   tags: string[];
 }
 
