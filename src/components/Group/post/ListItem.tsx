@@ -22,7 +22,7 @@ const PostListItem: React.FC<Props> = ({ post, groupName, ...props }) => {
       <h3 className="d-inline-block">{post.name}</h3>
 
       <div className="float-right">
-        <div>Posts: {post.commentsCount}</div>
+        <div>Comments: {post.commentsCount}</div>
         <div>Subscribers: {post.subscriberCount}</div>
       </div>
     </li>
