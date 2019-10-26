@@ -5,8 +5,10 @@ import { getCurrentPageSelector } from "../../store/page/selector";
 import { GroupResponse } from "../../global/models/group-models";
 import AddPostModal from "../_Shared/modals/addPost";
 import styles from "./pane.module.scss";
+import { getCurrentUserSelector } from "../../store/currentUser/selectors";
 
 const GroupPane: React.FC = () => {
+  const currentUser = useSelector(getCurrentUserSelector);
   const group = useSelector(getCurrentPageSelector).obj as GroupResponse;
   const [showAddPost, setShowAddPost] = useState(false);
 
@@ -28,8 +30,8 @@ const GroupPane: React.FC = () => {
       <table className={styles.info}>
         <thead>
           <tr>
-            <th>Subscriber Count</th>
-            <th>Post Count</th>
+            <th>Subscribers</th>
+            <th>Posts</th>
             <th>Start Date</th>
           </tr>
         </thead>
@@ -42,7 +44,7 @@ const GroupPane: React.FC = () => {
         </tbody>
       </table>
 
-      {group && (
+      {group && currentUser.isLoggedIn && (
         <React.Fragment>
           <AddPostModal
             group={group.name}

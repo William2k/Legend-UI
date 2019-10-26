@@ -6,14 +6,15 @@ import styles from "./list.module.scss";
 
 interface Props {
   posts: PostResponse[];
+  groupName: string;
 }
 
-const PostList: React.FC<Props> = props => {
+const PostList: React.FC<Props> = ({groupName, ...props}) => {
   return (
     <div className={styles.container}>
       <ul className={styles.item}>
         {props.posts.map((post, i) => (
-          <PostListItem key={i} post={post} />
+          <PostListItem key={i} groupName={groupName} post={post} />
         ))}
       </ul>
     </div>

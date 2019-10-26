@@ -64,7 +64,7 @@ const Group: React.FC<Props> = props => {
         <p>{group.description}</p>
       </div>
 
-      <PostList posts={posts} />
+      <PostList groupName={groupName} posts={posts} />
     </div>
   );
 };

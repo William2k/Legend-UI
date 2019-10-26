@@ -18,6 +18,7 @@ import Group from "./Group";
 import { useConfig } from "../global/config";
 import Axios from "axios";
 import GroupsViewer from "./Group/GroupsViewer";
+import Post from "./Group/Post";
 
 Axios.defaults.baseURL = useConfig.apiBaseURL;
 
@@ -50,6 +51,7 @@ const App: React.FC = () => {
               />
               <Route path="/account/signin" component={SignIn} />
               <Route path="/account/signup" component={SignUp} />
+              <Route path="/g/:groupName/:postId" component={Post} />
               <Route path="/g/:groupName" component={Group} />
             </Switch>
           </CSSTransition>

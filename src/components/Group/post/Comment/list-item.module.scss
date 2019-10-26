@@ -1,0 +1,15 @@
+$radius: 10px;
+
+.item {
+  border: 2px solid blueviolet;
+  padding: 20px;
+  overflow: auto;
+
+  &:first-child{
+    border-radius: $radius $radius 0 0;
+  }
+
+  &:last-child{
+    border-radius: 0 0 $radius $radius;
+  }
+}

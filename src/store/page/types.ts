@@ -3,6 +3,7 @@ import { Action } from "redux";
 
 export enum PageEnum {
   None,
+  Comment,
   Post,
   Group,
   Posts,

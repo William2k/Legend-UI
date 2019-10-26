@@ -1,5 +1,7 @@
 export interface PostResponse {
+  id: number;
   name: string;
+  content: string;
   isActive: boolean;
   commentsCount: number;
   subscriberCount: number;
