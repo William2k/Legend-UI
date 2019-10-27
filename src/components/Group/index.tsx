@@ -22,7 +22,7 @@ const Group: React.FC<Props> = props => {
   const [posts, setPosts] = useState([] as PostResponse[]);
   const [pagination, setPagination] = useState({
     group: groupName,
-    limit: 30,
+    limit: 10,
     lastCount: 0,
     initial: true,
     asc: false

@@ -6,6 +6,8 @@ export interface PostResponse {
   commentsCount: number;
   subscriberCount: number;
   commentsTodayCount: number;
+  dateCreated: string;
+  dateModified: string;
 }
 
 export interface AddPost {

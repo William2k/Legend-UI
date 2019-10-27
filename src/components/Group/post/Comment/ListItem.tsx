@@ -22,7 +22,10 @@ const CommentListItem: React.FC<Props> = ({
 }) => {
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [commentText, setCommentText] = useState("");
-  const {...dateCreated} = useMemo(() => dateDiff(new Date(comment.dateCreated)), [comment.dateCreated]);
+  const { ...dateCreated } = useMemo(
+    () => dateDiff(new Date(comment.dateCreated)),
+    [comment.dateCreated]
+  );
 
   const currentUser = useSelector(getCurrentUserSelector);
 
@@ -49,12 +52,13 @@ const CommentListItem: React.FC<Props> = ({
   return (
     <li className={styles.item}>
       <div>
-        <h6 className={styles.commentCreator}>{comment.creator}</h6> 
+        <h6 className={styles.commentCreator}>{comment.creator}</h6>
         <sub>Posted </sub>
         {!!dateCreated.hours && <sub>{dateCreated.hours} hours ago</sub>}
-        {!dateCreated.hours && !!dateCreated.minutes && <sub>{dateCreated.minutes} minutes ago</sub>}
-        {!dateCreated.hours && !dateCreated.minutes && (!!dateCreated.seconds && dateCreated.seconds > 10) && <sub>{dateCreated.seconds} seconds ago</sub>}
-        {!dateCreated.hours && !dateCreated.minutes && (!dateCreated.seconds || dateCreated.seconds < 11) && <sub> now</sub>}
+        {!dateCreated.hours && !!dateCreated.minutes && (
+          <sub>{dateCreated.minutes} minutes ago</sub>
+        )}
+        {!dateCreated.hours && !dateCreated.minutes && <sub> now</sub>}
       </div>
 
       {comment.content}
@@ -78,7 +82,7 @@ const CommentListItem: React.FC<Props> = ({
           </button>
         </div>
       )}
-      <CommentList comments={comment.comments} addComment={addComment}/>
+      <CommentList comments={comment.comments} addComment={addComment} />
     </li>
   );
 };

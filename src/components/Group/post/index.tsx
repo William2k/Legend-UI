@@ -26,7 +26,7 @@ const Post: React.FC<Props> = props => {
 
   const [pagination, setPagination] = useState({
     post: postId,
-    limit: 30,
+    limit: 10,
     lastDateCreated: new Date(),
     initial: true,
     asc: false
@@ -48,7 +48,7 @@ const Post: React.FC<Props> = props => {
     Axios.get(`post/${postId}`).then(
       (response: AxiosResponse<PostResponse>) => {
         const currentPage = {
-          page: PageEnum.Comment,
+          page: PageEnum.Post,
           obj: response.data
         } as CurrentPage;
         dispatch(pageActions.setCurrentPage(currentPage));
