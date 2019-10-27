@@ -1,9 +1,11 @@
 export interface CommentResponse {
+    id: number;
     content: string;
     isActive: boolean;
     dateCreated: string;
     dateModified: string;
     creator: string;
+    comments: CommentResponse[];
 }
 
 export interface AddComment {

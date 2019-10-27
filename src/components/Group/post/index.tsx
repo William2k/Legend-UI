@@ -82,8 +82,18 @@ const Post: React.FC<Props> = props => {
       parentCommentId: 0
     } as AddComment;
 
+    postComment(addComment);
+  };
+
+  const handleAddComment = (comment: AddComment) => {
+    comment.postId = postId;
+
+    postComment(comment);
+  }
+
+  const postComment = async (comment: AddComment) => {
     try {
-      await Axios.post("comment", addComment);
+      await Axios.post("comment", comment);
 
       fetchComments();
       setComment("");
@@ -91,7 +101,7 @@ const Post: React.FC<Props> = props => {
       // show errow
       alert("Failed to save comment");
     }
-  };
+  } 
 
   return (
     <div>
@@ -109,7 +119,7 @@ const Post: React.FC<Props> = props => {
           </button>
         </div>
       )}
-      <CommentList comments={comments} />
+      <CommentList comments={comments} addComment={handleAddComment} />
     </div>
   );
 };
