@@ -47,20 +47,24 @@ const Post: React.FC<Props> = props => {
   const [showMessageBox, setShowMessageBox] = useState(true);
 
   useEffect(() => {
-    Axios.get(`post/${postId}`).then(
-      (response: AxiosResponse<PostResponse>) => {
-        const currentPage = {
-          page: PageEnum.Post,
-          obj: response.data
-        } as CurrentPage;
-        dispatch(pageActions.setCurrentPage(currentPage));
-
-        setPost(response.data);
-      }
-    );
-
     fetchComments();
+
+    fetchPost();
   }, [postId]);
+
+  const fetchPost = async () => {
+    const response = (await Axios.get(`post/${postId}`)) as AxiosResponse<
+      PostResponse
+    >;
+
+    const currentPage = {
+      page: PageEnum.Post,
+      obj: response.data
+    } as CurrentPage;
+    dispatch(pageActions.setCurrentPage(currentPage));
+
+    setPost(response.data);
+  };
 
   const fetchComments = async () => {
     setFetchingComments(true);
@@ -91,19 +95,20 @@ const Post: React.FC<Props> = props => {
     comment.postId = postId;
 
     postComment(comment);
-  }
+  };
 
   const postComment = async (comment: AddComment) => {
     try {
       await Axios.post("comment", comment);
 
       fetchComments();
+      fetchPost();
       setComment("");
     } catch (error) {
       // show errow
       alert("Failed to save comment");
     }
-  } 
+  };
 
   return (
     <div>
