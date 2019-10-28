@@ -38,10 +38,10 @@ const AddPostModal: React.FC<Props> = ({ group, ...props }) => {
     }
 
     if (!values.content) {
-        setErrorMessage("Opening Post required");
-  
-        return;
-      }
+      setErrorMessage("Opening Post required");
+
+      return;
+    }
 
     setSubmitting(true);
 
@@ -134,7 +134,7 @@ const AddPostModal: React.FC<Props> = ({ group, ...props }) => {
           color="primary"
           type="submit"
         >
-          Create Group
+          Submit Post
           {submitting && <Spinner />}
         </Button>
       </ModalFooter>

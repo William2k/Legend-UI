@@ -14,7 +14,7 @@ const PostListItem: React.FC<Props> = ({ post, groupName, ...props }) => {
   const dispatch = useDispatch();
 
   const openPost = () => {
-    dispatch(push(`${groupName}/${post.id}`));
+    dispatch(push(`/g/${groupName}/${post.id}`));
   };
 
   return (

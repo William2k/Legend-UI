@@ -51,10 +51,6 @@ const Group: React.FC<Props> = props => {
     Axios.get(`post`, { params: pagination }).then(
       (response: AxiosResponse<PostResponse[]>) => setPosts(response.data)
     );
-    
-    return () => {
-      dispatch(pageActions.removeCurrentPage());
-    };
   }, [groupName]);
 
   return (

@@ -9,10 +9,11 @@ import {
   AddComment
 } from "../../../global/models/comment-models";
 import { CurrentPage, PageEnum } from "../../../store/page/types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { pageActions } from "../../../store/page/actions";
 import { PostResponse } from "../../../global/models/post-models";
 import CommentList from "./Comment/List";
+import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 
 interface MatchParams {
   postId: string;
@@ -23,6 +24,7 @@ interface Props extends RouteComponentProps<MatchParams> {}
 const Post: React.FC<Props> = props => {
   const postId = Number(props.match.params.postId);
   const dispatch = useDispatch();
+  const currentUser = useSelector(getCurrentUserSelector);
 
   const [pagination, setPagination] = useState({
     post: postId,
@@ -107,7 +109,7 @@ const Post: React.FC<Props> = props => {
     <div>
       <h1>{post.name}</h1>
       <p>{post.content}</p>
-      {showMessageBox && (
+      {showMessageBox && currentUser.isLoggedIn && (
         <div className={styles.textBox}>
           <textarea
             className="w-100"

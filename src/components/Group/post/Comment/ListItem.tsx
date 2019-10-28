@@ -54,11 +54,25 @@ const CommentListItem: React.FC<Props> = ({
       <div>
         <h6 className={styles.commentCreator}>{comment.creator}</h6>
         <sub>Posted </sub>
-        {!!dateCreated.hours && <sub>{dateCreated.hours} hours ago</sub>}
-        {!dateCreated.hours && !!dateCreated.minutes && (
-          <sub>{dateCreated.minutes} minutes ago</sub>
+        {!!dateCreated.days && (
+          <sub>
+            {dateCreated.days} {dateCreated.days === 1 ? "day" : "days"} ago
+          </sub>
         )}
-        {!dateCreated.hours && !dateCreated.minutes && <sub> now</sub>}
+        {!dateCreated.days && !!dateCreated.hours && (
+          <sub>
+            {dateCreated.hours} {dateCreated.hours === 1 ? "Hour" : "Hours"} ago
+          </sub>
+        )}
+        {!dateCreated.days && !dateCreated.hours && !!dateCreated.minutes && (
+          <sub>
+            {dateCreated.minutes}{" "}
+            {dateCreated.minutes === 1 ? "minute" : "minutes"} ago
+          </sub>
+        )}
+        {!dateCreated.days && !dateCreated.hours && !dateCreated.minutes && (
+          <sub> now</sub>
+        )}
       </div>
 
       {comment.content}

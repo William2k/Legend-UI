@@ -72,6 +72,8 @@ export const currentUserActions = {
         payload: data
       } as SignInSuccess);
     } catch (error) {
+      Axios.defaults.headers.common.Authorization = null;
+
       dispatch({
         type: CurrentUserActionTypes.SIGNIN_FAILURE
       } as SignInFailure);
