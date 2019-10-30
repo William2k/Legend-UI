@@ -13,6 +13,10 @@ const initialState = {
     roles: [],
     isActive: false,
     settings: { routeAnimation: "FADE", theme: "" }
+  },
+  subscriptions: {
+    groups: [],
+    posts: {}
   }
 } as CurrentUserState;
 
@@ -61,6 +65,16 @@ export default (
           ...state.user,
           settings: { ...state.user.settings, ...action.payload }
         }
+      };
+    case CurrentUserActionTypes.GET_SUBBED_POSTS_SUCCESS:
+      return {
+        ...state,
+        subscriptions: { ...state.subscriptions, posts: action.payload }
+      };
+    case CurrentUserActionTypes.GET_SUBBED_GROUPS_SUCCESS:
+      return {
+        ...state,
+        subscriptions: { ...state.subscriptions, groups: action.payload }
       };
     default:
   }

@@ -1,16 +1,25 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { getCurrentPageSelector } from "../../store/page/selector";
 import { GroupResponse } from "../../global/models/group-models";
 import AddPostModal from "../_Shared/modals/addPost";
 import styles from "./pane.module.scss";
-import { getCurrentUserSelector } from "../../store/currentUser/selectors";
+import { getCurrentUserSelector, getUserSubsSelector } from "../../store/currentUser/selectors";
+import Axios from "axios";
+import { currentUserActions } from "../../store/currentUser/actions";
 
 const GroupPane: React.FC = () => {
   const currentUser = useSelector(getCurrentUserSelector);
+  const userSubs = useSelector(getUserSubsSelector);
   const group = useSelector(getCurrentPageSelector).obj as GroupResponse;
+  const [subbed, setSubbed] = useState(false);
   const [showAddPost, setShowAddPost] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setSubbed(userSubs.groups.includes(group.name));
+  }, [userSubs.groups])
 
   const toggleShowAddPost = () => {
     setShowAddPost(!showAddPost);
@@ -22,6 +31,16 @@ const GroupPane: React.FC = () => {
   const handleAddPostClick = (e: React.MouseEvent) => {
     setShowAddPost(true);
   };
+
+  const handleJoinClick = async () => {
+    try {
+      await Axios.post(`group/${group.name}/subscribe`);
+
+      dispatch(currentUserActions.getSubscribedGroups());
+    } catch (error) {
+      alert("Failed to join");
+    }
+  }
 
   return (
     <div>
@@ -53,6 +72,7 @@ const GroupPane: React.FC = () => {
             toggle={toggleShowAddPost}
             showModal={showAddPost}
           />
+          <button className="btn btn-info w-100" onClick={handleJoinClick}>{subbed ? "Joined" : "Join"}</button>
           <button className="btn btn-info w-100" onClick={handleAddPostClick}>
             Add Post
           </button>

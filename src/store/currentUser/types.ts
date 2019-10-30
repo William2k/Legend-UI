@@ -11,6 +11,12 @@ export interface CurrentUserState {
   isPosting: boolean;
   isLoggedIn: boolean;
   user: FullUser;
+  subscriptions: UserSubscriptions;
+}
+
+export interface UserSubscriptions {
+  posts: {[key: number]: string};
+  groups: string[];
 }
 
 export interface GetUserRequest
@@ -70,6 +76,24 @@ export interface SaveSettingsSuccess
 export interface SaveSettingsFailure
   extends Action<CurrentUserActionTypes.SAVE_SETTINGS_FAILURE> {}
 
+export interface GetSubbedPostsRequest
+  extends Action<CurrentUserActionTypes.GET_SUBBED_POSTS_REQUEST> {}
+export interface GetSubbedPostsSuccess
+  extends Action<CurrentUserActionTypes.GET_SUBBED_POSTS_SUCCESS> {
+  payload: {[key: number]: string};
+}
+export interface GetSubbedPostsFailure
+  extends Action<CurrentUserActionTypes.GET_SUBBED_POSTS_FAILURE> {}
+
+export interface GetSubbedGroupsRequest
+  extends Action<CurrentUserActionTypes.GET_SUBBED_GROUPS_REQUEST> {}
+export interface GetSubbedGroupsSuccess
+  extends Action<CurrentUserActionTypes.GET_SUBBED_GROUPS_SUCCESS> {
+  payload: string[];
+}
+export interface GetSubbedGroupsFailure
+  extends Action<CurrentUserActionTypes.GET_SUBBED_GROUPS_FAILURE> {}
+
 export type CurrentUserActions =
   | GetUserRequest
   | GetUserSuccess
@@ -87,4 +111,10 @@ export type CurrentUserActions =
   | SignUpFailure
   | SaveSettingsRequest
   | SaveSettingsSuccess
-  | SaveSettingsFailure;
+  | SaveSettingsFailure
+  | GetSubbedPostsRequest
+  | GetSubbedPostsSuccess
+  | GetSubbedPostsFailure
+  | GetSubbedGroupsRequest
+  | GetSubbedGroupsFailure
+  | GetSubbedGroupsSuccess;

@@ -11,17 +11,19 @@ import {
 import { CurrentPage, PageEnum } from "../../../store/page/types";
 import { useDispatch, useSelector } from "react-redux";
 import { pageActions } from "../../../store/page/actions";
-import { PostResponse } from "../../../global/models/post-models";
+import { PostResponse, FullPost } from "../../../global/models/post-models";
 import CommentList from "./Comment/List";
 import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 
 interface MatchParams {
+  groupName: string;
   postId: string;
 }
 
 interface Props extends RouteComponentProps<MatchParams> {}
 
 const Post: React.FC<Props> = props => {
+  const groupName = props.match.params.groupName;
   const postId = Number(props.match.params.postId);
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUserSelector);
@@ -59,7 +61,7 @@ const Post: React.FC<Props> = props => {
 
     const currentPage = {
       page: PageEnum.Post,
-      obj: response.data
+      obj: {...response.data, groupName} as FullPost
     } as CurrentPage;
     dispatch(pageActions.setCurrentPage(currentPage));
 

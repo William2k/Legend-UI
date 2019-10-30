@@ -21,7 +21,13 @@ import {
   SignUpSuccess,
   SaveSettingsRequest,
   SaveSettingsSuccess,
-  SaveSettingsFailure
+  SaveSettingsFailure,
+  GetSubbedPostsSuccess,
+  GetSubbedPostsFailure,
+  GetSubbedPostsRequest,
+  GetSubbedGroupsRequest,
+  GetSubbedGroupsFailure,
+  GetSubbedGroupsSuccess
 } from "./types";
 
 export enum CurrentUserActionTypes {
@@ -45,7 +51,15 @@ export enum CurrentUserActionTypes {
 
   SAVE_SETTINGS_REQUEST = "[Save Settings] Save Settings_Requested",
   SAVE_SETTINGS_SUCCESS = "[Save Settings] Save Settings Successful",
-  SAVE_SETTINGS_FAILURE = "[Save Settings] Save Settings Failed"
+  SAVE_SETTINGS_FAILURE = "[Save Settings] Save Settings Failed",
+
+  GET_SUBBED_POSTS_REQUEST = "[Get Subbed Posts] Get Get Subbed Posts Request",
+  GET_SUBBED_POSTS_SUCCESS = "[Get Subbed Posts] Get Subbed Posts Success",
+  GET_SUBBED_POSTS_FAILURE = "[Get Subbed Posts] Get Subbed Posts Failure",
+
+  GET_SUBBED_GROUPS_REQUEST = "[Get Subbed Groups] Get Get Subbed Groups Request",
+  GET_SUBBED_GROUPS_SUCCESS = "[Get Subbed Groups] Get Subbed Groups Success",
+  GET_SUBBED_GROUPS_FAILURE = "[Get Subbed Groups] Get Subbed Groups Failure"
 }
 
 export const currentUserActions = {
@@ -71,6 +85,9 @@ export const currentUserActions = {
         type: CurrentUserActionTypes.SIGNIN_SUCCESS,
         payload: data
       } as SignInSuccess);
+
+      dispatch(currentUserActions.getSubscribedGroups() as any);
+      dispatch(currentUserActions.getSubscribedPosts() as any);
     } catch (error) {
       Axios.defaults.headers.common.Authorization = null;
 
@@ -98,7 +115,11 @@ export const currentUserActions = {
         type: CurrentUserActionTypes.SIGNIN_SUCCESS,
         payload: data.user
       } as SignInSuccess);
+
       dispatch(push("/"));
+
+      dispatch(currentUserActions.getSubscribedGroups() as any);
+      dispatch(currentUserActions.getSubscribedPosts() as any);
     } catch (error) {
       dispatch({
         type: CurrentUserActionTypes.SIGNIN_FAILURE
@@ -160,6 +181,52 @@ export const currentUserActions = {
       dispatch({
         type: CurrentUserActionTypes.SAVE_SETTINGS_FAILURE
       } as SaveSettingsFailure);
+    }
+  },
+  getSubscribedPosts: () => async (
+    dispatch: Dispatch,
+    getState: () => AppState
+  ) => {
+    dispatch({
+      type: CurrentUserActionTypes.GET_SUBBED_POSTS_REQUEST
+    } as GetSubbedPostsRequest);
+
+    try {
+      const response = (await Axios.get(
+        "post/subscribed"
+      )) as AxiosResponse<{[key: number]: string;}>;
+
+      dispatch({
+        type: CurrentUserActionTypes.GET_SUBBED_POSTS_SUCCESS,
+        payload: response.data
+      } as GetSubbedPostsSuccess);
+    } catch (error) {
+      dispatch({
+        type: CurrentUserActionTypes.GET_SUBBED_POSTS_FAILURE
+      } as GetSubbedPostsFailure);
+    }
+  },
+  getSubscribedGroups: () => async (
+    dispatch: Dispatch,
+    getState: () => AppState
+  ) => {
+    dispatch({
+      type: CurrentUserActionTypes.GET_SUBBED_GROUPS_REQUEST
+    } as GetSubbedGroupsRequest);
+
+    try {
+      const response = (await Axios.get("group/subscribed")) as AxiosResponse<
+        []
+      >;
+
+      dispatch({
+        type: CurrentUserActionTypes.GET_SUBBED_GROUPS_SUCCESS,
+        payload: response.data
+      } as GetSubbedGroupsSuccess);
+    } catch (error) {
+      dispatch({
+        type: CurrentUserActionTypes.GET_SUBBED_GROUPS_FAILURE
+      } as GetSubbedGroupsFailure);
     }
   }
 };

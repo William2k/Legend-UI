@@ -10,6 +10,10 @@ export interface PostResponse {
   dateModified: string;
 }
 
+export interface FullPost extends PostResponse {
+  groupName: String;
+}
+
 export interface AddPost {
   name: string;
   content: string;
