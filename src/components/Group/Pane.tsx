@@ -5,7 +5,10 @@ import { getCurrentPageSelector } from "../../store/page/selector";
 import { GroupResponse } from "../../global/models/group-models";
 import AddPostModal from "../_Shared/modals/addPost";
 import styles from "./pane.module.scss";
-import { getCurrentUserSelector, getUserSubsSelector } from "../../store/currentUser/selectors";
+import {
+  getCurrentUserSelector,
+  getUserSubsSelector
+} from "../../store/currentUser/selectors";
 import Axios from "axios";
 import { currentUserActions } from "../../store/currentUser/actions";
 
@@ -19,7 +22,7 @@ const GroupPane: React.FC = () => {
 
   useEffect(() => {
     setSubbed(userSubs.groups.includes(group.name));
-  }, [userSubs.groups])
+  }, [userSubs.groups]);
 
   const toggleShowAddPost = () => {
     setShowAddPost(!showAddPost);
@@ -34,13 +37,15 @@ const GroupPane: React.FC = () => {
 
   const handleJoinClick = async () => {
     try {
-      await Axios.post(`group/${group.name}/subscribe`);
+      await (subbed
+        ? Axios.delete(`group/${group.name}/unsubscribe`)
+        : Axios.post(`group/${group.name}/subscribe`));
 
       dispatch(currentUserActions.getSubscribedGroups());
     } catch (error) {
       alert("Failed to join");
     }
-  }
+  };
 
   return (
     <div>
@@ -72,7 +77,9 @@ const GroupPane: React.FC = () => {
             toggle={toggleShowAddPost}
             showModal={showAddPost}
           />
-          <button className="btn btn-info w-100" onClick={handleJoinClick}>{subbed ? "Joined" : "Join"}</button>
+          <button className="btn btn-info w-100" onClick={handleJoinClick}>
+            {subbed ? "Joined" : "Join"}
+          </button>
           <button className="btn btn-info w-100" onClick={handleAddPostClick}>
             Add Post
           </button>

@@ -24,9 +24,13 @@ const PostPane: React.FC = () => {
 
   const handleJoinClick = async () => {
     try {
-      await Axios.post(`post/${post.id}/subscribe`, null, {
-        params: { group: post.groupName }
-      });
+      await (subbed
+        ? Axios.delete(`post/${post.id}/unsubscribe`, {
+            params: { group: post.groupName }
+          })
+        : Axios.post(`post/${post.id}/subscribe`, null, {
+            params: { group: post.groupName }
+          }));
 
       dispatch(currentUserActions.getSubscribedPosts());
     } catch (error) {
