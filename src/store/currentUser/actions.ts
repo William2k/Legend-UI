@@ -116,8 +116,6 @@ export const currentUserActions = {
         payload: data.user
       } as SignInSuccess);
 
-      dispatch(push("/"));
-
       dispatch(currentUserActions.getSubscribedGroups() as any);
       dispatch(currentUserActions.getSubscribedPosts() as any);
     } catch (error) {
@@ -156,7 +154,6 @@ export const currentUserActions = {
       dispatch({
         type: CurrentUserActionTypes.SIGNUP_SUCCESS
       } as SignUpSuccess);
-      dispatch(push("/account/signin"));
     } catch (error) {
       dispatch({
         type: CurrentUserActionTypes.SIGNUP_FAILURE

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Axios from "axios";
 
 import { FullPost } from "../../../global/models/post-models";
 import { getCurrentPageSelector } from "../../../store/page/selector";
 import styles from "./pane.module.scss";
-import Axios from "axios";
 import {
   getCurrentUserSelector,
   getUserSubsSelector

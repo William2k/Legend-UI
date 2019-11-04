@@ -5,11 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Nav from "./Nav";
 import MainWrapper from "./_Shared/wrappers/MainWrapper";
-import Home from "./Home";
 import PrivateRoute from "./PrivateRoute";
 import Account from "./Account";
-import SignIn from "./Account/SignIn";
-import SignUp from "./Account/SignUp";
 import { getLocationSelector } from "../store/router/selectors";
 import { getCurrentUserSelector } from "../store/currentUser/selectors";
 import initialiser from "../appInitialiser";
@@ -49,8 +46,6 @@ const App: React.FC = () => {
                 component={Account}
                 authorised={currentUser.isLoggedIn}
               />
-              <Route path="/account/signin" component={SignIn} />
-              <Route path="/account/signup" component={SignUp} />
               <Route path="/g/:groupName/:postId" component={Post} />
               <Route path="/g/:groupName" component={Group} />
             </Switch>

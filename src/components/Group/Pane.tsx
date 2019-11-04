@@ -68,6 +68,10 @@ const GroupPane: React.FC = () => {
         </tbody>
       </table>
 
+      <div>
+        {group.description}
+      </div>
+
       {group && currentUser.isLoggedIn && (
         <React.Fragment>
           <AddPostModal

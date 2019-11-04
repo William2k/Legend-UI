@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -17,7 +17,10 @@ import {
   getUserSelector,
   getCurrentUserSelector
 } from "../../store/currentUser/selectors";
+import styles from "./index.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SignInModal from "../_Shared/modals/signin";
+import SignUpModal from "../_Shared/modals/signup";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -60,11 +63,19 @@ const DropDownMenuElem = styled(DropdownMenu)`
   }
 `;
 
+enum NavModals {
+  None,
+  Signin,
+  Signup
+}
+
 const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUserSelector);
   const user = useSelector(getUserSelector);
   const searchInput = useRef(null);
+
+  const [modal, setModal] = useState(NavModals.None);
 
   const search = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +85,16 @@ const Nav: React.FC = () => {
     e.preventDefault();
 
     dispatch(currentUserActions.signOutUser());
+  };
+
+  useEffect(() => {
+    if(currentUser.isLoggedIn) {
+      setModal(NavModals.None);
+    }
+  }, [currentUser.isLoggedIn])
+
+  const handleCloseModal = () => {
+    setModal(NavModals.None);
   };
 
   return (
@@ -95,15 +116,28 @@ const Nav: React.FC = () => {
           ) : (
             <React.Fragment>
               <NavItem>
-                <NavLink to="/account/signin" className="nav-link">
+                <a
+                  className={`${styles.modalLink} nav-link`}
+                  onClick={() => setModal(NavModals.Signin)}
+                >
                   Signin
-                </NavLink>
+                </a>
               </NavItem>
               <NavItem>
-                <NavLink to="/account/signup" className="nav-link">
+                <a
+                  className={`${styles.modalLink} nav-link`}
+                  onClick={() => setModal(NavModals.Signup)}
+                >
                   Signup
-                </NavLink>
+                </a>
               </NavItem>
+
+              {modal === NavModals.Signin && (
+                <SignInModal showModal={true} toggle={handleCloseModal} />
+              )}
+              {modal === NavModals.Signup && (
+                <SignUpModal showModal={true} toggle={handleCloseModal} />
+              )}
             </React.Fragment>
           )}
         </ul>

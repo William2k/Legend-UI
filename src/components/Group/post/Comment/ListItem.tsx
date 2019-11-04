@@ -49,30 +49,39 @@ const CommentListItem: React.FC<Props> = ({
     setShowMessageBox(!showMessageBox);
   };
 
+  const getPostDateLabel = () => {
+    if (dateCreated.years) {
+      return `${dateCreated.years} ${
+        dateCreated.years === 1 ? "year" : "years"
+      } ago`;
+    } else if (dateCreated.months) {
+      return `${dateCreated.months} ${
+        dateCreated.months === 1 ? "month" : "months"
+      } ago`;
+    } else if (dateCreated.days) {
+      return `${dateCreated.days} ${
+        dateCreated.days === 1 ? "day" : "days"
+      } ago`;
+    } else if (dateCreated.hours) {
+      return `${dateCreated.hours} ${
+        dateCreated.hours === 1 ? "hour" : "hours"
+      } ago`;
+    } else if (dateCreated.minutes) {
+      return `${dateCreated.minutes} ${
+        dateCreated.minutes === 1 ? "minute" : "minutes"
+      } ago`;
+    } else {
+      return "now";
+    }
+  };
+
   return (
     <li className={styles.item}>
       <div>
         <h6 className={styles.commentCreator}>{comment.creator}</h6>
         <sub>Posted </sub>
-        {!!dateCreated.days && (
-          <sub>
-            {dateCreated.days} {dateCreated.days === 1 ? "day" : "days"} ago
-          </sub>
-        )}
-        {!dateCreated.days && !!dateCreated.hours && (
-          <sub>
-            {dateCreated.hours} {dateCreated.hours === 1 ? "Hour" : "Hours"} ago
-          </sub>
-        )}
-        {!dateCreated.days && !dateCreated.hours && !!dateCreated.minutes && (
-          <sub>
-            {dateCreated.minutes}{" "}
-            {dateCreated.minutes === 1 ? "minute" : "minutes"} ago
-          </sub>
-        )}
-        {!dateCreated.days && !dateCreated.hours && !dateCreated.minutes && (
-          <sub> now</sub>
-        )}
+
+        <sub> {getPostDateLabel()}</sub>
       </div>
 
       {comment.content}
