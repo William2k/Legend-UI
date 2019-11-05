@@ -58,6 +58,10 @@ const CommentListItem: React.FC<Props> = ({
       return `${dateCreated.months} ${
         dateCreated.months === 1 ? "month" : "months"
       } ago`;
+    } else if (dateCreated.weeks) {
+      return `${dateCreated.weeks} ${
+        dateCreated.weeks === 1 ? "week" : "weeks"
+      } ago`;
     } else if (dateCreated.days) {
       return `${dateCreated.days} ${
         dateCreated.days === 1 ? "day" : "days"

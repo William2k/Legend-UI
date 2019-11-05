@@ -10,6 +10,9 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
 
 import { maxHeightExpand } from "../_Shared/animations";
 import { currentUserActions } from "../../store/currentUser/actions";
@@ -97,6 +100,22 @@ const Nav: React.FC = () => {
     setModal(NavModals.None);
   };
 
+  const handleSignUpUserSubmmit = () => {
+    store.addNotification({
+      title: 'Sign Up Success',
+      message: 'User has been added sucessfully',
+      type: 'default',                         
+      container: 'bottom-left',              
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: {
+        duration: 3000 
+      }
+    });
+    
+    setModal(NavModals.Signin);
+  };
+
   return (
     <Navigation className="navbar navbar-expand-lg navbar-dark position-fixed">
       <NavLink to="/" className="navbar-brand">
@@ -136,7 +155,7 @@ const Nav: React.FC = () => {
                 <SignInModal showModal={true} toggle={handleCloseModal} />
               )}
               {modal === NavModals.Signup && (
-                <SignUpModal showModal={true} toggle={handleCloseModal} />
+                <SignUpModal showModal={true} toggle={handleCloseModal} userSubmited={handleSignUpUserSubmmit} />
               )}
             </React.Fragment>
           )}

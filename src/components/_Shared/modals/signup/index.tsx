@@ -6,17 +6,18 @@ import useForm from "../../hooks/useForm";
 import styles from "./index.module.scss";
 import { Spinner } from "../../miniComponents";
 import { SignUp } from "../../../../global/models/user-models";
-import { currentUserActions } from "../../../../store/currentUser/actions";
-import { getCurrentUserSelector } from "../../../../store/currentUser/selectors";
+import { getUserSelector } from "../../../../store/currentUser/selectors";
+import Axios from "axios";
 
 interface Props {
   showModal: boolean;
   toggle: () => void;
+  userSubmited: () => void;
 }
 
 const SignUpModal: React.FC<Props> = props => {
-  const dispatch = useDispatch();
-  const currentUser = useSelector(getCurrentUserSelector);
+  const user = useSelector(getUserSelector);
+  const [isPosting, setIsPosting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const signupSubmit = async () => { debugger;
@@ -28,7 +29,27 @@ const SignUpModal: React.FC<Props> = props => {
       return;
     }
 
-    dispatch(currentUserActions.signUpUser(values));
+    const payload = {...values};
+
+    if (payload.password !== payload.confirmPassword) {
+      // will add a validator function to validate the password for complexity
+      return;
+    }
+
+    delete payload.confirmPassword;
+    payload.settings = user.settings; // saves the default settings to user object
+
+    setIsPosting(true);
+
+    try {
+      await Axios.post("account/signup", payload);
+
+      props.userSubmited();
+    } catch (error) {
+      setErrorMessage("Failed to add user");
+    } finally {
+      setIsPosting(false);
+    }
   };
 
   const clearForm = () => {
@@ -41,7 +62,7 @@ const SignUpModal: React.FC<Props> = props => {
     clearForm();
   };
 
-  const { values, handleChange, handleSubmit, setValue, resetValues } = useForm(
+  const { values, handleChange, handleSubmit, resetValues } = useForm(
     {
       username: "",
       emailAddress: "",
@@ -169,13 +190,13 @@ const SignUpModal: React.FC<Props> = props => {
           Reset
         </Button>
         <Button
-          disabled={currentUser.isPosting}
+          disabled={isPosting}
           form="signup-form"
           color="primary"
           type="submit"
         >
           SignUp
-          {currentUser.isPosting && <Spinner />}
+          {isPosting && <Spinner />}
         </Button>
       </ModalFooter>
     </Modal>

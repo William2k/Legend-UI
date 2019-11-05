@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { useSelector, useDispatch } from "react-redux";
+import ReactNotifications from "react-notifications-component";
+import Axios from "axios";
 
 import Nav from "./Nav";
 import MainWrapper from "./_Shared/wrappers/MainWrapper";
@@ -13,7 +15,6 @@ import initialiser from "../appInitialiser";
 import { currentUserActions } from "../store/currentUser/actions";
 import Group from "./Group";
 import { useConfig } from "../global/config";
-import Axios from "axios";
 import GroupsViewer from "./Group/GroupsViewer";
 import Post from "./Group/Post";
 
@@ -52,6 +53,7 @@ const App: React.FC = () => {
           </CSSTransition>
         </TransitionGroup>
       </MainWrapper>
+      <ReactNotifications />
     </React.Fragment>
   );
 };

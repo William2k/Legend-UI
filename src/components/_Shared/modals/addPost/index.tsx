@@ -78,7 +78,7 @@ const AddPostModal: React.FC<Props> = ({ group, ...props }) => {
     clearForm();
   };
 
-  const { values, handleChange, handleSubmit, setValue, resetValues } = useForm(
+  const { values, handleChange, handleSubmit, resetValues } = useForm(
     {
       name: "",
       content: ""

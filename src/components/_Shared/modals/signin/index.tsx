@@ -41,7 +41,7 @@ const SignInModal: React.FC<Props> = props => {
     clearForm();
   };
 
-  const { values, handleChange, handleSubmit, setValue, resetValues } = useForm(
+  const { values, handleChange, handleSubmit, resetValues } = useForm(
     {
       username: "",
       password: "",
