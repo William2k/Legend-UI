@@ -9,7 +9,7 @@ export default (dispatch: Dispatch<Action>) => {
   axios.interceptors.response.use(
     response => response,
     error => {
-      if (error.response.status === 401) {
+      if (error && error.response && error.response.status === 401) {
         dispatch({
           type: CurrentUserActionTypes.AUTHENTICATION_FAILED
         } as AuthenticationFailed);

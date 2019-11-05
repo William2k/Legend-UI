@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import Axios, { AxiosResponse } from "axios";
+import debounce from "lodash.debounce";
 
 import styles from "./index.module.scss";
 import {
@@ -27,14 +28,16 @@ const Post: React.FC<Props> = props => {
   const postId = Number(props.match.params.postId);
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUserSelector);
+  const [allCommentsLoaded, setAllCommentsLoaded] = useState(false);
 
   const [pagination, setPagination] = useState({
     post: postId,
-    limit: 10,
+    limit: 4,
     lastDateCreated: new Date(),
     initial: true,
     asc: false
   } as CommentPagination);
+
   const [post, setPost] = useState({
     id: 0,
     name: "",
@@ -49,6 +52,20 @@ const Post: React.FC<Props> = props => {
   const [showMessageBox, setShowMessageBox] = useState(true);
 
   useEffect(() => {
+    window.onscroll = debounce(scrollLoadComments, 1000);
+  }, []);
+
+  const scrollLoadComments = () => {
+    if (
+      !allCommentsLoaded &&
+      window.innerHeight + document.documentElement.scrollTop >
+        document.documentElement.offsetHeight * 0.8
+    ) {
+      fetchComments();
+    }
+  };
+
+  useEffect(() => {
     fetchComments();
 
     fetchPost();
@@ -61,7 +78,7 @@ const Post: React.FC<Props> = props => {
 
     const currentPage = {
       page: PageEnum.Post,
-      obj: {...response.data, groupName} as FullPost
+      obj: { ...response.data, groupName } as FullPost
     } as CurrentPage;
     dispatch(pageActions.setCurrentPage(currentPage));
 
@@ -75,8 +92,23 @@ const Post: React.FC<Props> = props => {
       params: pagination
     })) as AxiosResponse<CommentResponse[]>;
 
-    setComments(response.data);
+    setComments(stateComments => [...stateComments, ...response.data]);
     setFetchingComments(false);
+
+    if (response.data.length === 0) {
+      setAllCommentsLoaded(true);
+      return;
+    }
+
+    pagination.initial = false;
+
+    pagination.lastDateCreated = new Date(
+      response.data.map(comment => comment.dateCreated).sort()[0]
+    );
+
+    setPagination(pagination);
+
+    scrollLoadComments();
   };
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
