@@ -86,6 +86,10 @@ const Post: React.FC<Props> = props => {
   };
 
   const fetchComments = async () => {
+    if(fetchingComments) {
+      return;
+    }
+
     setFetchingComments(true);
 
     const response = (await Axios.get(`comment`, {
