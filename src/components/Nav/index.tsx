@@ -10,9 +10,9 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import 'animate.css';
+import { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import "animate.css";
 
 import { maxHeightExpand } from "../_Shared/animations";
 import { currentUserActions } from "../../store/currentUser/actions";
@@ -24,6 +24,8 @@ import styles from "./index.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SignInModal from "../_Shared/modals/signin";
 import SignUpModal from "../_Shared/modals/signup";
+import useNotification from "../_Shared/notifications";
+import { NotificationType } from "../_Shared/notifications/types";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -76,6 +78,7 @@ const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUserSelector);
   const user = useSelector(getUserSelector);
+  const { notify } = useNotification();
   const searchInput = useRef(null);
 
   const [modal, setModal] = useState(NavModals.None);
@@ -91,28 +94,22 @@ const Nav: React.FC = () => {
   };
 
   useEffect(() => {
-    if(currentUser.isLoggedIn) {
+    if (currentUser.isLoggedIn) {
       setModal(NavModals.None);
     }
-  }, [currentUser.isLoggedIn])
+  }, [currentUser.isLoggedIn]);
 
   const handleCloseModal = () => {
     setModal(NavModals.None);
   };
 
   const handleSignUpUserSubmmit = () => {
-    store.addNotification({
-      title: 'Sign Up Success',
-      message: 'User has been added sucessfully',
-      type: 'default',                         
-      container: 'bottom-left',              
-      animationIn: ["animated", "fadeIn"],
-      animationOut: ["animated", "fadeOut"],
-      dismiss: {
-        duration: 3000 
-      }
-    });
-    
+    notify(
+      "Sign Up Success",
+      "User has been added sucessfully",
+      NotificationType.Default
+    );
+
     setModal(NavModals.Signin);
   };
 
@@ -155,7 +152,11 @@ const Nav: React.FC = () => {
                 <SignInModal showModal={true} toggle={handleCloseModal} />
               )}
               {modal === NavModals.Signup && (
-                <SignUpModal showModal={true} toggle={handleCloseModal} userSubmited={handleSignUpUserSubmmit} />
+                <SignUpModal
+                  showModal={true}
+                  toggle={handleCloseModal}
+                  userSubmited={handleSignUpUserSubmmit}
+                />
               )}
             </React.Fragment>
           )}
