@@ -1,5 +1,6 @@
-import { PageActionTypes } from "./actions";
 import { Action } from "redux";
+
+import { PageActionTypes } from "./actions";
 
 export enum PageEnum {
   None,

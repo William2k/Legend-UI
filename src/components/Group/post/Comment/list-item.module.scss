@@ -1,7 +1,7 @@
 $radius: 10px;
 
 .item {
-  border: .4px solid rgb(20, 6, 34);
+  border: 0.4px solid rgb(20, 6, 34);
   border-left: 2px solid blueviolet;
   padding: 20px 0 20px 20px;
   overflow: auto;
@@ -14,7 +14,7 @@ $radius: 10px;
     border-radius: 0 0 $radius $radius;
   }
 
-  sub{
+  sub {
     bottom: 0;
   }
 }
@@ -29,8 +29,16 @@ $radius: 10px;
   display: inline-block;
   text-decoration: underline;
 
-  &:hover{
+  &:hover {
     color: blueviolet;
   }
 }
 
+.commentContent {
+  overflow-wrap: break-word;
+  white-space: pre-line;
+}
+
+.reply {
+  margin-bottom: 10px;
+}

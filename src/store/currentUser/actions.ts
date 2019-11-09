@@ -1,5 +1,7 @@
 import Axios, { AxiosResponse } from "axios";
 import { push } from "connected-react-router";
+import { Dispatch } from "redux";
+
 import {
   SignIn,
   SignUp,
@@ -7,7 +9,6 @@ import {
   UserResponseWithToken,
   UserResponse
 } from "../../global/models/user-models";
-import { Dispatch } from "redux";
 import AppState from "../state-model";
 import {
   GetUserCanceled,

@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Axios, { AxiosResponse } from "axios";
 import debounce from "lodash.debounce";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   CommentResponse,
@@ -9,7 +10,6 @@ import {
 } from "../../../../global/models/comment-models";
 import { PostResponse, FullPost } from "../../../../global/models/post-models";
 import { CurrentPage, PageEnum } from "../../../../store/page/types";
-import { useDispatch, useSelector } from "react-redux";
 import { pageActions } from "../../../../store/page/actions";
 import { getUserSelector } from "../../../../store/currentUser/selectors";
 import { NotificationType } from "../../../_Shared/notifications/types";
@@ -96,30 +96,39 @@ const useCommentApi = (groupName: string, postId: number) => {
       return;
     }
 
-    setFetchingComments(true);
+    try {
+      setFetchingComments(true);
+      const response = (await Axios.get(`comment`, {
+        params: pagination
+      })) as AxiosResponse<CommentResponse[]>;
 
-    const response = (await Axios.get(`comment`, {
-      params: pagination
-    })) as AxiosResponse<CommentResponse[]>;
+      setComments(stateComments => [...stateComments, ...response.data]);
+      setFetchingComments(false);
 
-    setComments(stateComments => [...stateComments, ...response.data]);
-    setFetchingComments(false);
+      if (!response.data.length) {
+        setAllCommentsLoaded(true);
+        return;
+      }
 
-    if (!response.data.length) {
-      setAllCommentsLoaded(true);
-      return;
+      pagination.initial = false;
+
+      pagination.lastDateCreated = new Date(
+        response.data.map(comment => comment.dateCreated).sort()[0]
+      );
+
+      setPagination(pagination);
+      scrollLoadComments();
+
+      generateFlattenedComments(response.data);
+    } catch (error) {
+      notify(
+        "Error loading",
+        "Failed to load comments",
+        NotificationType.Danger
+      );
+    } finally {
+      setFetchingComments(false);
     }
-
-    pagination.initial = false;
-
-    pagination.lastDateCreated = new Date(
-      response.data.map(comment => comment.dateCreated).sort()[0]
-    );
-
-    setPagination(pagination);
-    scrollLoadComments();
-
-    generateFlattenedComments(response.data);
   };
 
   const getChildComments = async (
@@ -127,6 +136,7 @@ const useCommentApi = (groupName: string, postId: number) => {
     maxLevel: number = pagination.maxLevel
   ) => {
     try {
+      setFetchingComments(true);
       const response = (await Axios.get(`comment/${parent}`, {
         params: { maxLevel }
       })) as AxiosResponse<CommentResponse>;
@@ -138,6 +148,8 @@ const useCommentApi = (groupName: string, postId: number) => {
         "Failed to load comments",
         NotificationType.Danger
       );
+    } finally {
+      setFetchingComments(false);
     }
   };
 

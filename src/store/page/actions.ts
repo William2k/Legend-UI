@@ -1,5 +1,6 @@
-import AppState from "../state-model";
 import { Dispatch } from "redux";
+
+import AppState from "../state-model";
 import {
   SetPageColour,
   RemovePageColour,

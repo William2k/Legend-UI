@@ -1,10 +1,11 @@
+import { Action } from "redux";
+
 import {
   FullUser,
   UserResponse,
   UserSettings
 } from "../../global/models/user-models";
 import { CurrentUserActionTypes } from "./actions";
-import { Action } from "redux";
 
 export interface CurrentUserState {
   isFetching: boolean;

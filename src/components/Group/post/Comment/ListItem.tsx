@@ -23,6 +23,7 @@ const CommentListItem: React.FC<Props> = ({
   ...props
 }) => {
   const [showMessageBox, setShowMessageBox] = useState(false);
+  const [fetchingChildComments, setFetchingChildComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const { ...dateCreated } = useMemo(
     () => dateDiff(new Date(comment.dateCreated)),
@@ -82,6 +83,12 @@ const CommentListItem: React.FC<Props> = ({
   };
 
   const handleShowComments = () => {
+    if (fetchingChildComments) {
+      return;
+    }
+
+    setFetchingChildComments(true);
+
     getChildComments(comment.id);
   };
 
@@ -94,9 +101,10 @@ const CommentListItem: React.FC<Props> = ({
         <sub> {getPostDateLabel()}</sub>
       </div>
 
-      {comment.content}
+      <div className={styles.commentContent}>{comment.content}</div>
+
       {currentUser.isLoggedIn && (
-        <div>
+        <div className={styles.reply}>
           <button className="btn btn-dark" onClick={toggleShowMessageBox}>
             Reply
           </button>
@@ -124,7 +132,9 @@ const CommentListItem: React.FC<Props> = ({
       ) : (
         <div>
           <div className={styles.showComments} onClick={handleShowComments}>
-            Show all Comments
+            {fetchingChildComments
+              ? "Loading more comments..."
+              : "Show more comments"}
           </div>
         </div>
       )}
