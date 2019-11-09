@@ -135,7 +135,7 @@ const useCommentApi = (groupName: string, postId: number) => {
     } catch (error) {
       notify(
         "Error loading",
-        "Failed to load comment",
+        "Failed to load comments",
         NotificationType.Danger
       );
     }

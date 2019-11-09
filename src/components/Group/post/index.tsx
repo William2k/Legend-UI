@@ -3,9 +3,7 @@ import { RouteComponentProps } from "react-router";
 import { useSelector } from "react-redux";
 
 import styles from "./index.module.scss";
-import {
-  AddComment
-} from "../../../global/models/comment-models";
+import { AddComment } from "../../../global/models/comment-models";
 import CommentList from "./Comment/List";
 import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 import useCommentApi from "./Comment/useCommentApi";
@@ -22,7 +20,16 @@ const Post: React.FC<Props> = props => {
   const groupName = props.match.params.groupName;
   const postId = Number(props.match.params.postId);
   const currentUser = useSelector(getCurrentUserSelector);
-  const { postComment, getChildComments, setCommentText, commentText, comments, post, showMessageBox, fetchingComments } = useCommentApi(groupName, postId);
+  const {
+    postComment,
+    getChildComments,
+    setCommentText,
+    commentText,
+    comments,
+    post,
+    showMessageBox,
+    fetchingComments
+  } = useCommentApi(groupName, postId);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
@@ -60,7 +67,13 @@ const Post: React.FC<Props> = props => {
           </button>
         </div>
       )}
-      <CommentList comments={comments} addComment={handleAddComment} getChildComments={getChildComments} />
+      <div className={styles.commentsContainer}>
+        <CommentList
+          comments={comments}
+          addComment={handleAddComment}
+          getChildComments={getChildComments}
+        />
+      </div>
     </div>
   );
 };

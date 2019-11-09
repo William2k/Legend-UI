@@ -83,7 +83,7 @@ const CommentListItem: React.FC<Props> = ({
 
   const handleShowComments = () => {
     getChildComments(comment.id);
-  }
+  };
 
   return (
     <li className={styles.item}>
@@ -116,9 +116,17 @@ const CommentListItem: React.FC<Props> = ({
         </div>
       )}
       {comment.comments ? (
-        <CommentList comments={comment.comments} addComment={addComment} getChildComments={getChildComments} />
+        <CommentList
+          comments={comment.comments}
+          addComment={addComment}
+          getChildComments={getChildComments}
+        />
       ) : (
-        <div className={styles.showComments} onClick={handleShowComments}>Show all Comments</div>
+        <div>
+          <div className={styles.showComments} onClick={handleShowComments}>
+            Show all Comments
+          </div>
+        </div>
       )}
     </li>
   );

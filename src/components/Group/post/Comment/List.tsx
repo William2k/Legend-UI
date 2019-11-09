@@ -12,7 +12,7 @@ interface Props {
 
 const CommentList: React.FC<Props> = ({ comments, addComment, getChildComments, ...props }) => {
   return (
-    <div className={styles.container}>
+    <div>
       <ul className={styles.item}>
         {comments.map((comment, i) => (
           <CommentListItem key={i} comment={comment} addComment={addComment} getChildComments={getChildComments}/>
