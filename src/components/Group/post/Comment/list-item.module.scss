@@ -2,7 +2,7 @@ $radius: 10px;
 
 .item {
   border: 2px solid blueviolet;
-  padding: 20px;
+  padding: 20px 0 20px 20px;
   overflow: auto;
 
   &:first-child {
@@ -21,5 +21,15 @@ $radius: 10px;
 .commentCreator {
   display: inline;
   margin-right: 7px;
+}
+
+.showComments {
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: underline;
+
+  &:hover{
+    color: aqua;
+  }
 }
 

@@ -22,7 +22,7 @@ const Post: React.FC<Props> = props => {
   const groupName = props.match.params.groupName;
   const postId = Number(props.match.params.postId);
   const currentUser = useSelector(getCurrentUserSelector);
-  const { postComment, setCommentText, commentText, comments, post, showMessageBox, fetchingComments } = useCommentApi(groupName, postId);
+  const { postComment, getChildComments, setCommentText, commentText, comments, post, showMessageBox, fetchingComments } = useCommentApi(groupName, postId);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
@@ -60,7 +60,7 @@ const Post: React.FC<Props> = props => {
           </button>
         </div>
       )}
-      <CommentList comments={comments} addComment={handleAddComment} />
+      <CommentList comments={comments} addComment={handleAddComment} getChildComments={getChildComments} />
     </div>
   );
 };

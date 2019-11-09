@@ -26,6 +26,7 @@ const useCommentApi = (groupName: string, postId: number) => {
     limit: 4,
     lastDateCreated: new Date(),
     initial: true,
+    maxLevel: 4,
     asc: false
   } as CommentPagination);
 
@@ -44,12 +45,18 @@ const useCommentApi = (groupName: string, postId: number) => {
   const [showMessageBox, setShowMessageBox] = useState(true);
 
   useEffect(() => {
-    window.onscroll = debounce(scrollLoadComments, 1000);
+    window.onscroll = debounce(scrollLoadComments, 1000); // debounce causing state value issues, need to use set methods to get current value
   }, []);
 
   const scrollLoadComments = () => {
+    let allLoaded = false;
+    setAllCommentsLoaded(current => {
+      allLoaded = current;
+      return current;
+    });
+
     if (
-      !allCommentsLoaded &&
+      !allLoaded &&
       window.innerHeight + document.documentElement.scrollTop >
         document.documentElement.offsetHeight * 0.8
     ) {
@@ -115,6 +122,25 @@ const useCommentApi = (groupName: string, postId: number) => {
     generateFlattenedComments(response.data);
   };
 
+  const getChildComments = async (
+    parent: number,
+    maxLevel: number = pagination.maxLevel
+  ) => {
+    try {
+      const response = (await Axios.get(`comment/${parent}`, {
+        params: { maxLevel }
+      })) as AxiosResponse<CommentResponse>;
+
+      addChildComments(response.data);
+    } catch (error) {
+      notify(
+        "Error loading",
+        "Failed to load comment",
+        NotificationType.Danger
+      );
+    }
+  };
+
   const postComment = async (comment: AddComment) => {
     try {
       const response = (await Axios.post("comment", comment)) as AxiosResponse<
@@ -137,7 +163,8 @@ const useCommentApi = (groupName: string, postId: number) => {
   ) => {
     for (const comment of currentComments) {
       arr.push(comment);
-      flattenComments(comment.comments, arr);
+
+      comment.comments && flattenComments(comment.comments, arr);
     }
   };
 
@@ -147,7 +174,6 @@ const useCommentApi = (groupName: string, postId: number) => {
     const newArr = [] as CommentResponse[];
 
     flattenComments(newComments, newArr);
-
     setFlatComments(flat => [...flat, ...newArr]);
   };
 
@@ -159,6 +185,7 @@ const useCommentApi = (groupName: string, postId: number) => {
       dateCreated: new Date().toISOString(),
       creator: user.username,
       dateModified: "",
+      level: 0,
       comments: []
     } as CommentResponse;
 
@@ -185,8 +212,25 @@ const useCommentApi = (groupName: string, postId: number) => {
     );
   };
 
+  const addChildComments = (parentComment: CommentResponse) => {
+    const comment = flatComments.find(com => com.id === parentComment.id);
+
+    if (comment) {
+      comment.comments = parentComment.comments;
+      generateFlattenedComments(comment.comments);
+      return;
+    }
+
+    notify(
+      "Error loading",
+      "Error loading comments, refresh the page",
+      NotificationType.Danger
+    );
+  };
+
   return {
     post,
+    getChildComments,
     setCommentText,
     setComments,
     commentText,

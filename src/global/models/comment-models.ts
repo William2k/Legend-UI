@@ -5,6 +5,7 @@ export interface CommentResponse {
     dateCreated: string;
     dateModified: string;
     creator: string;
+    level: number;
     comments: CommentResponse[];
 }
 
@@ -19,6 +20,7 @@ export interface CommentPagination {
     limit: number;
     lastDateCreated: Date;
     initial: boolean;
+    maxLevel: number;
     asc: boolean;
   }
   

@@ -13,11 +13,13 @@ import CommentList from "./List";
 interface Props {
   comment: CommentResponse;
   addComment: (comment: AddComment) => void;
+  getChildComments: (parent: number, maxLevel?: number) => void;
 }
 
 const CommentListItem: React.FC<Props> = ({
   comment,
   addComment,
+  getChildComments,
   ...props
 }) => {
   const [showMessageBox, setShowMessageBox] = useState(false);
@@ -79,6 +81,10 @@ const CommentListItem: React.FC<Props> = ({
     }
   };
 
+  const handleShowComments = () => {
+    getChildComments(comment.id);
+  }
+
   return (
     <li className={styles.item}>
       <div>
@@ -109,7 +115,11 @@ const CommentListItem: React.FC<Props> = ({
           </button>
         </div>
       )}
-      <CommentList comments={comment.comments} addComment={addComment} />
+      {comment.comments ? (
+        <CommentList comments={comment.comments} addComment={addComment} getChildComments={getChildComments} />
+      ) : (
+        <div className={styles.showComments} onClick={handleShowComments}>Show all Comments</div>
+      )}
     </li>
   );
 };
