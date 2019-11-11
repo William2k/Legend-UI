@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Axios, { AxiosResponse } from "axios";
-import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -45,7 +45,7 @@ const useCommentApi = (groupName: string, postId: number) => {
   const [showMessageBox, setShowMessageBox] = useState(true);
 
   useEffect(() => {
-    window.onscroll = debounce(scrollLoadComments, 1000); // debounce causing state value issues, need to use set methods to get current value
+    window.onscroll = throttle(scrollLoadComments, 1500); // debounce causing state value issues, need to use set methods to get current value
   }, []);
 
   const scrollLoadComments = () => {

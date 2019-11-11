@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import Axios, { AxiosResponse } from "axios";
+import { useDispatch } from "react-redux";
+
 import { GroupResponse } from "../../global/models/group-models";
 import { PostResponse, PostPagination } from "../../global/models/post-models";
 import PostList from "./Post/List";
-import { useDispatch } from "react-redux";
 import { pageActions } from "../../store/page/actions";
 import { CurrentPage, PageEnum } from "../../store/page/types";
 

@@ -7,7 +7,6 @@ import { AddComment } from "../../../global/models/comment-models";
 import CommentList from "./Comment/List";
 import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 import useCommentApi from "./Comment/useCommentApi";
-import useNotification from "../../_Shared/notifications";
 
 interface MatchParams {
   groupName: string;
