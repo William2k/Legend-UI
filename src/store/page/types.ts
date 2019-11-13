@@ -14,6 +14,7 @@ export enum PageEnum {
 export interface CurrentPage {
   page: PageEnum;
   obj: {};
+  navText: string;
 }
 
 export interface PageState {

@@ -14,7 +14,7 @@ const MainPanel: React.FC = () => {
   const currentPage = useSelector(getCurrentPageSelector);
 
   return (
-    <React.Fragment>
+    <>
       {currentPage.page === PageEnum.Group && (
         <div className={styles.pane}>
           <GroupPane />
@@ -38,7 +38,7 @@ const MainPanel: React.FC = () => {
       <div className={styles.pane}>
         <MainPane />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -34,7 +34,7 @@ const App: React.FC = () => {
   const currentUser = useSelector(getCurrentUserSelector);
 
   return (
-    <React.Fragment>
+    <>
       <Nav />
       <MainWrapper>
         <TransitionGroup component={null}>
@@ -54,7 +54,7 @@ const App: React.FC = () => {
         </TransitionGroup>
       </MainWrapper>
       <ReactNotifications />
-    </React.Fragment>
+    </>
   );
 };
 

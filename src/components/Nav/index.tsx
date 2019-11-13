@@ -18,7 +18,8 @@ import { maxHeightExpand } from "../_Shared/animations";
 import { currentUserActions } from "../../store/currentUser/actions";
 import {
   getUserSelector,
-  getCurrentUserSelector
+  getCurrentUserSelector,
+  getUserSubsSelector
 } from "../../store/currentUser/selectors";
 import styles from "./index.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,6 +27,10 @@ import SignInModal from "../_Shared/modals/signin";
 import SignUpModal from "../_Shared/modals/signup";
 import useNotification from "../_Shared/notifications";
 import { NotificationType } from "../_Shared/notifications/types";
+import { getCurrentPageSelector } from "../../store/page/selector";
+import { PageEnum } from "../../store/page/types";
+import { GroupResponse } from "../../global/models/group-models";
+import { push } from "connected-react-router";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -78,6 +83,8 @@ const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUserSelector);
   const user = useSelector(getUserSelector);
+  const currentPage = useSelector(getCurrentPageSelector);
+  const userSubs = useSelector(getUserSubsSelector);
   const { notify } = useNotification();
   const searchInput = useRef(null);
 
@@ -103,6 +110,12 @@ const Nav: React.FC = () => {
     setModal(NavModals.None);
   };
 
+  const handleGroupClick = (e: React.MouseEvent) => {
+    const elem = e.target as HTMLElement;
+
+    dispatch(push(`/g/${elem.dataset.group}`));
+  };
+
   const handleSignUpUserSubmmit = () => {
     notify(
       "Sign Up Success",
@@ -122,15 +135,32 @@ const Nav: React.FC = () => {
       <div className="collpase navbar-collapse">
         <ul className="navbar-nav mr-auto">
           {currentUser.isLoggedIn ? (
-            <React.Fragment>
+            <>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  {currentPage.navText}
+                </DropdownToggle>
+                <DropDownMenuElem right>
+                  {userSubs.groups.map((group, i) => (
+                    <DropdownItem
+                      key={i}
+                      className="btn btn-info"
+                      onClick={handleGroupClick}
+                      data-group={group}
+                    >
+                      g/{group}
+                    </DropdownItem>
+                  ))}
+                </DropDownMenuElem>
+              </UncontrolledDropdown>
               <NavItem>
                 <NavLink to="/account" className="nav-link">
                   Account
                 </NavLink>
               </NavItem>
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
+            <>
               <NavItem>
                 <a
                   className={`${styles.modalLink} nav-link`}
@@ -158,7 +188,7 @@ const Nav: React.FC = () => {
                   userSubmited={handleSignUpUserSubmmit}
                 />
               )}
-            </React.Fragment>
+            </>
           )}
         </ul>
         <form onSubmit={search}>

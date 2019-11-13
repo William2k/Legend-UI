@@ -20,11 +20,11 @@ const MainPane: React.FC = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <h2>Home</h2>
 
       {currentUser.isLoggedIn && (
-        <React.Fragment>
+        <>
           <button
             className="btn-dark btn"
             type="button"
@@ -33,9 +33,9 @@ const MainPane: React.FC = () => {
             Create Group
           </button>
           <AddGroupModal openModal={openAddGroup} closeModal={closeAddGroup} toggle={toggleShowAddGroup} showModal={showAddGroup} />{" "}
-        </React.Fragment>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 };
 

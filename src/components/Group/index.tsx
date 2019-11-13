@@ -42,15 +42,21 @@ const Group: React.FC<Props> = props => {
   useEffect(() => {
     Axios.get(`group/${groupName}`).then(
       (response: AxiosResponse<GroupResponse>) => {
-        const currentPage = { page: PageEnum.Group, obj: response.data } as CurrentPage;
+        const currentPage = {
+          page: PageEnum.Group,
+          obj: response.data,
+          navText: `g/${groupName}`
+        } as CurrentPage;
         dispatch(pageActions.setCurrentPage(currentPage));
-        
-        setGroup(response.data)
+
+        setGroup(response.data);
       }
     );
 
-    Axios.get(`post`, { params: pagination }).then(
-      (response: AxiosResponse<PostResponse[]>) => setPosts(response.data)
+    Axios.get(`post`, {
+      params: pagination
+    }).then((response: AxiosResponse<PostResponse[]>) =>
+      setPosts(response.data)
     );
   }, [groupName]);
 

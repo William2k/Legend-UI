@@ -77,7 +77,8 @@ const useCommentApi = (groupName: string, postId: number) => {
 
     const currentPage = {
       page: PageEnum.Post,
-      obj: { ...response.data, groupName } as FullPost
+      obj: { ...response.data, groupName } as FullPost,
+      navText: `g/${groupName}`
     } as CurrentPage;
     dispatch(pageActions.setCurrentPage(currentPage));
 

@@ -3,7 +3,7 @@ import { PageState, PageActions, PageEnum } from "./types";
 import { backgroundColours } from "../../global/colours";
 
 const initialState = {
-  currentPage: { page: PageEnum.None, obj: {} },
+  currentPage: { page: PageEnum.None, obj: {}, navText: "Select Group" },
   bgColour: backgroundColours.default
 } as PageState;
 
@@ -27,7 +27,7 @@ export default (state = initialState, action: PageActions): PageState => {
     case PageActionTypes.REMOVE_CURRENT_PAGE:
       return {
         ...state,
-        currentPage: { page: PageEnum.None, obj: {} }
+        currentPage: { ...initialState.currentPage }
       };
     default:
   }

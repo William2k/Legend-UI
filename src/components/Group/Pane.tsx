@@ -73,7 +73,7 @@ const GroupPane: React.FC = () => {
       </div>
 
       {group && currentUser.isLoggedIn && (
-        <React.Fragment>
+        <>
           <AddPostModal
             group={group.name}
             openModal={openAddPost}
@@ -87,7 +87,7 @@ const GroupPane: React.FC = () => {
           <button className="btn btn-info w-100" onClick={handleAddPostClick}>
             Add Post
           </button>
-        </React.Fragment>
+        </>
       )}
     </div>
   );
