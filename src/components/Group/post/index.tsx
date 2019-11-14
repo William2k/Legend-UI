@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import styles from "./index.module.scss";
@@ -37,18 +37,22 @@ const Post: React.FC<Props> = ({
   ...props
 }) => {
   const currentUser = useSelector(getCurrentUserSelector);
-
+  const postContainer = useRef({} as HTMLDivElement);
   const [elems, setElems] = useState({
     scrollElem: {} as HTMLElement,
     contentElem: {} as HTMLElement
   });
 
   useEffect(() => {
-    setTimeout(() => updateElems(), 1);
-  }, []);
+    updateElems();
+  }, [postContainer.current]);
 
   const updateElems = () => {
-    const scrollElem = document.querySelector(".modal") as HTMLElement;
+    if (!postContainer.current.closest) {
+      return;
+    }
+
+    const scrollElem = postContainer.current.closest(".modal") as HTMLElement;
 
     if (!scrollElem) {
       return;
@@ -102,7 +106,7 @@ const Post: React.FC<Props> = ({
     <PostModal isOpen={showPost} toggle={toggleShowPost}>
       <ModalHeader toggle={toggleShowPost}>{post.content}</ModalHeader>
       <ModalBody>
-        <div className={styles.postContainer}>
+        <div className={styles.postContainer} ref={postContainer}>
           <main>
             <h1>{post.name}</h1>
             <p>{post.content}</p>
