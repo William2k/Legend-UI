@@ -1,5 +1,4 @@
-import React from "react";
-import { RouteComponentProps } from "react-router";
+import React, { useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import styles from "./index.module.scss";
@@ -7,18 +6,24 @@ import { AddComment } from "../../../global/models/comment-models";
 import CommentList from "./Comment/List";
 import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 import useCommentApi from "./Comment/useCommentApi";
+import PostPane from "./Pane";
 
-interface MatchParams {
-  groupName: string;
-  postId: string;
+interface Props {
+  postId: number;
 }
 
-interface Props extends RouteComponentProps<MatchParams> {}
-
-const Post: React.FC<Props> = props => {
-  const groupName = props.match.params.groupName;
-  const postId = Number(props.match.params.postId);
+const Post: React.FC<Props> = ({ postId, ...props }) => {
   const currentUser = useSelector(getCurrentUserSelector);
+  const postContainer = useRef({} as HTMLDivElement);
+
+  const elems = useMemo(() => {
+    if (postContainer.current.closest) {
+      const scrollElem = postContainer.current.closest(".modal") as HTMLElement;
+      const contentElem = scrollElem.querySelector(".modal-content") as HTMLElement;
+      return {scrollElem, contentElem};
+    }
+  }, [postContainer.current]);
+
   const {
     postComment,
     getChildComments,
@@ -28,7 +33,7 @@ const Post: React.FC<Props> = props => {
     post,
     showMessageBox,
     fetchingComments
-  } = useCommentApi(groupName, postId);
+  } = useCommentApi(postId, elems && elems.scrollElem, elems && elems.contentElem, !!postContainer.current.closest);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
@@ -51,28 +56,36 @@ const Post: React.FC<Props> = props => {
   };
 
   return (
-    <div>
-      <h1>{post.name}</h1>
-      <p>{post.content}</p>
-      {showMessageBox && currentUser.isLoggedIn && (
-        <div className={styles.textBox}>
-          <textarea
-            className="w-100"
-            value={commentText}
-            onChange={handleCommentChange}
+    <div className={styles.postContainer} ref={postContainer}>
+      <main>
+        <h1>{post.name}</h1>
+        <p>{post.content}</p>
+        {showMessageBox && currentUser.isLoggedIn && (
+          <div className={styles.textBox}>
+            <textarea
+              className="w-100"
+              value={commentText}
+              onChange={handleCommentChange}
+            />
+            <button
+              className="btn btn-light w-100"
+              onClick={handleCommentSubmit}
+            >
+              {fetchingComments ? "Loading Comments" : "Submit"}
+            </button>
+          </div>
+        )}
+        <div className={styles.commentsContainer}>
+          <CommentList
+            comments={comments}
+            addComment={handleAddComment}
+            getChildComments={getChildComments}
           />
-          <button className="btn btn-light w-100" onClick={handleCommentSubmit}>
-            {fetchingComments ? "Loading Comments" : "Submit"}
-          </button>
         </div>
-      )}
-      <div className={styles.commentsContainer}>
-        <CommentList
-          comments={comments}
-          addComment={handleAddComment}
-          getChildComments={getChildComments}
-        />
-      </div>
+      </main>
+      <article>
+        <PostPane />
+      </article>
     </div>
   );
 };

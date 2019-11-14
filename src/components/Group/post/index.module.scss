@@ -1,7 +1,19 @@
-.textBox{
-    width: 100%;
+.textBox {
+  width: 100%;
 }
 
 .commentsContainer {
-    padding: 15px;
+  padding: 15px;
+}
+
+.postContainer {
+  display: flex;
+
+  > main {
+    flex-basis: 65%;
   }
+
+  > article {
+    flex-basis: 35%;
+  }
+}

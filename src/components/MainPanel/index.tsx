@@ -21,12 +21,6 @@ const MainPanel: React.FC = () => {
         </div>
       )}
 
-      {currentPage.page === PageEnum.Post && (
-        <div className={styles.pane}>
-          <PostPane />
-        </div>
-      )}
-
       <div className={styles.pane}>
         <TrendingGroupsPane />
       </div>

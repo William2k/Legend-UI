@@ -11,6 +11,7 @@ export interface CurrentUserState {
   isFetching: boolean;
   isPosting: boolean;
   isLoggedIn: boolean;
+  loginAttempts: number;
   user: FullUser;
   subscriptions: UserSubscriptions;
 }

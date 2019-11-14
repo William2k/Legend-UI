@@ -10,11 +10,14 @@ import {
   getUserSubsSelector
 } from "../../../store/currentUser/selectors";
 import { currentUserActions } from "../../../store/currentUser/actions";
+import useNotification from "../../_Shared/notifications";
+import { NotificationType } from "../../_Shared/notifications/types";
 
 const PostPane: React.FC = () => {
   const currentUser = useSelector(getCurrentUserSelector);
   const userSubs = useSelector(getUserSubsSelector);
   const post = useSelector(getCurrentPageSelector).obj as FullPost;
+  const { notify } = useNotification();
   const [subbed, setSubbed] = useState(false);
   const dispatch = useDispatch();
 
@@ -34,7 +37,7 @@ const PostPane: React.FC = () => {
 
       dispatch(currentUserActions.getSubscribedPosts());
     } catch (error) {
-      alert("Failed to join");
+      notify("Post Error", "Failed to follow post", NotificationType.Danger);
     }
   };
 
@@ -62,7 +65,7 @@ const PostPane: React.FC = () => {
       {post && currentUser.isLoggedIn && (
         <div>
           <button className="btn btn-info w-100" onClick={handleJoinClick}>
-            {subbed ? "Joined" : "Join"}
+            {subbed ? "Following" : "Follow"}
           </button>
         </div>
       )}

@@ -1,22 +1,25 @@
 import { useState, useEffect } from "react";
 import Axios, { AxiosResponse } from "axios";
 import throttle from "lodash.throttle";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import {
   CommentResponse,
   CommentPagination,
   AddComment
 } from "../../../../global/models/comment-models";
-import { PostResponse, FullPost } from "../../../../global/models/post-models";
-import { CurrentPage, PageEnum } from "../../../../store/page/types";
-import { pageActions } from "../../../../store/page/actions";
+import { PostResponse } from "../../../../global/models/post-models";
 import { getUserSelector } from "../../../../store/currentUser/selectors";
 import { NotificationType } from "../../../_Shared/notifications/types";
 import useNotification from "../../../_Shared/notifications";
 
-const useCommentApi = (groupName: string, postId: number) => {
-  const dispatch = useDispatch();
+const useCommentApi = (
+  postId: number,
+  scrollElem: HTMLElement = document.documentElement,
+  contentElem: HTMLElement = document.documentElement,
+  initialise = true,
+  useScrollLoad = true
+) => {
   const user = useSelector(getUserSelector);
   const [allCommentsLoaded, setAllCommentsLoaded] = useState(false);
   const { notify } = useNotification();
@@ -45,8 +48,15 @@ const useCommentApi = (groupName: string, postId: number) => {
   const [showMessageBox, setShowMessageBox] = useState(true);
 
   useEffect(() => {
-    window.onscroll = throttle(scrollLoadComments, 1500); // debounce causing state value issues, need to use set methods to get current value
-  }, []);
+    if (!initialise || !useScrollLoad) {
+      return;
+    }
+
+    (document.querySelector(".modal") as HTMLElement).onscroll = throttle(
+      scrollLoadComments,
+      1500
+    ); // debounce causing state value issues, need to use set methods to get current value
+  }, [scrollElem, initialise]);
 
   const scrollLoadComments = () => {
     let allLoaded = false;
@@ -57,30 +67,25 @@ const useCommentApi = (groupName: string, postId: number) => {
 
     if (
       !allLoaded &&
-      window.innerHeight + document.documentElement.scrollTop >
-        document.documentElement.offsetHeight * 0.8
+      window.innerHeight + scrollElem.scrollTop > contentElem.clientHeight * 0.6
     ) {
       fetchComments();
     }
   };
 
   useEffect(() => {
+    if (!initialise) {
+      return;
+    }
     fetchComments();
 
     fetchPost();
-  }, [postId]);
+  }, [postId, initialise]);
 
   const fetchPost = async () => {
     const response = (await Axios.get(`post/${postId}`)) as AxiosResponse<
       PostResponse
     >;
-
-    const currentPage = {
-      page: PageEnum.Post,
-      obj: { ...response.data, groupName } as FullPost,
-      navText: `g/${groupName}`
-    } as CurrentPage;
-    dispatch(pageActions.setCurrentPage(currentPage));
 
     setPost(response.data);
   };
@@ -118,9 +123,9 @@ const useCommentApi = (groupName: string, postId: number) => {
       );
 
       setPagination(pagination);
-      scrollLoadComments();
 
       generateFlattenedComments(response.data);
+      useScrollLoad ? scrollLoadComments() : fetchComments();
     } catch (error) {
       notify(
         "Error loading",

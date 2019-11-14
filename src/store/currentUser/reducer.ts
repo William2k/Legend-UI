@@ -5,6 +5,7 @@ const initialState = {
   isFetching: false,
   isPosting: false,
   isLoggedIn: false,
+  loginAttempts: 0,
   user: {
     username: "",
     firstName: "",
@@ -35,12 +36,14 @@ export default (
         ...state,
         user: { ...action.payload, settings: state.user.settings },
         isLoggedIn: true,
-        isFetching: false
+        isFetching: false,
+        loginAttempts: state.loginAttempts + 1
       };
     case CurrentUserActionTypes.SIGNIN_FAILURE:
       return {
         ...state,
-        isFetching: false
+        isFetching: false,
+        loginAttempts: state.loginAttempts + 1
       };
     case CurrentUserActionTypes.AUTHENTICATION_FAILED:
     case CurrentUserActionTypes.SIGNOUT_SUCCESS: {
@@ -57,6 +60,13 @@ export default (
       return {
         ...state,
         isPosting: false
+      };
+    case CurrentUserActionTypes.GETUSER_CANCELED:
+    case CurrentUserActionTypes.GETUSER_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        loginAttempts: state.loginAttempts + 1
       };
     case CurrentUserActionTypes.SAVE_SETTINGS_SUCCESS:
       return {

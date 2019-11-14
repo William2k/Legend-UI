@@ -10,9 +10,9 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import "animate.css";
+import { push } from "connected-react-router";
 
 import { maxHeightExpand } from "../_Shared/animations";
 import { currentUserActions } from "../../store/currentUser/actions";
@@ -28,9 +28,6 @@ import SignUpModal from "../_Shared/modals/signup";
 import useNotification from "../_Shared/notifications";
 import { NotificationType } from "../_Shared/notifications/types";
 import { getCurrentPageSelector } from "../../store/page/selector";
-import { PageEnum } from "../../store/page/types";
-import { GroupResponse } from "../../global/models/group-models";
-import { push } from "connected-react-router";
 
 const Navigation = styled.nav`
   z-index: 1000;

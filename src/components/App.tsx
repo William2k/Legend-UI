@@ -47,7 +47,7 @@ const App: React.FC = () => {
                 component={Account}
                 authorised={currentUser.isLoggedIn}
               />
-              <Route path="/g/:groupName/:postId" component={Post} />
+              <Route path="/g/:groupName/:postId" component={Group} />
               <Route path="/g/:groupName" component={Group} />
             </Switch>
           </CSSTransition>

@@ -2,23 +2,20 @@ import React from "react";
 
 import { PostResponse } from "../../../global/models/post-models";
 import styles from "./list-item.module.scss";
-import { push } from "connected-react-router";
-import { useDispatch } from "react-redux";
 
 interface Props {
   post: PostResponse;
   groupName: string;
+  openPost: (postId: number) => void; 
 }
 
-const PostListItem: React.FC<Props> = ({ post, groupName, ...props }) => {
-  const dispatch = useDispatch();
-
-  const openPost = () => {
-    dispatch(push(`/g/${groupName}/${post.id}`));
+const PostListItem: React.FC<Props> = ({ post, groupName, openPost, ...props }) => {
+  const handlePostClick = () => {
+    openPost(post.id);
   };
 
   return (
-    <li className={styles.item} onClick={openPost}>
+    <li className={styles.item} onClick={handlePostClick}>
       <h3 className="d-inline-block">{post.name}</h3>
 
       <div className="float-right">

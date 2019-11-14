@@ -11,6 +11,8 @@ import {
 } from "../../store/currentUser/selectors";
 import Axios from "axios";
 import { currentUserActions } from "../../store/currentUser/actions";
+import useNotification from "../_Shared/notifications";
+import { NotificationType } from "../_Shared/notifications/types";
 
 const GroupPane: React.FC = () => {
   const currentUser = useSelector(getCurrentUserSelector);
@@ -19,6 +21,7 @@ const GroupPane: React.FC = () => {
   const [subbed, setSubbed] = useState(false);
   const [showAddPost, setShowAddPost] = useState(false);
   const dispatch = useDispatch();
+  const {notify} = useNotification();
 
   useEffect(() => {
     setSubbed(userSubs.groups.includes(group.name));
@@ -43,7 +46,7 @@ const GroupPane: React.FC = () => {
 
       dispatch(currentUserActions.getSubscribedGroups());
     } catch (error) {
-      alert("Failed to join");
+      notify("Group Error", "Failed to subscribe to group", NotificationType.Danger);
     }
   };
 
