@@ -7,20 +7,24 @@ import CommentList from "./Comment/List";
 import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 import useCommentApi from "./Comment/useCommentApi";
 import PostPane from "./Pane";
+import { FullPost } from "../../../global/models/post-models";
 
 interface Props {
   postId: number;
+  groupName: string;
 }
 
-const Post: React.FC<Props> = ({ postId, ...props }) => {
+const Post: React.FC<Props> = ({ postId, groupName, ...props }) => {
   const currentUser = useSelector(getCurrentUserSelector);
   const postContainer = useRef({} as HTMLDivElement);
 
   const elems = useMemo(() => {
     if (postContainer.current.closest) {
       const scrollElem = postContainer.current.closest(".modal") as HTMLElement;
-      const contentElem = scrollElem.querySelector(".modal-content") as HTMLElement;
-      return {scrollElem, contentElem};
+      const contentElem = scrollElem.querySelector(
+        ".modal-content"
+      ) as HTMLElement;
+      return { scrollElem, contentElem };
     }
   }, [postContainer.current]);
 
@@ -33,7 +37,14 @@ const Post: React.FC<Props> = ({ postId, ...props }) => {
     post,
     showMessageBox,
     fetchingComments
-  } = useCommentApi(postId, elems && elems.scrollElem, elems && elems.contentElem, !!postContainer.current.closest);
+  } = useCommentApi(
+    postId,
+    elems && elems.scrollElem,
+    elems && elems.contentElem,
+    !!postContainer.current.closest
+  );
+
+  const fullPost = { ...post, groupName } as FullPost;
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
@@ -84,7 +95,7 @@ const Post: React.FC<Props> = ({ postId, ...props }) => {
         </div>
       </main>
       <article>
-        <PostPane />
+        <PostPane post={fullPost} />
       </article>
     </div>
   );

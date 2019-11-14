@@ -47,17 +47,6 @@ const useCommentApi = (
   const [fetchingComments, setFetchingComments] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(true);
 
-  useEffect(() => {
-    if (!initialise || !useScrollLoad) {
-      return;
-    }
-
-    (document.querySelector(".modal") as HTMLElement).onscroll = throttle(
-      scrollLoadComments,
-      1500
-    ); // debounce causing state value issues, need to use set methods to get current value
-  }, [scrollElem, initialise]);
-
   const scrollLoadComments = () => {
     let allLoaded = false;
     setAllCommentsLoaded(current => {
@@ -72,6 +61,16 @@ const useCommentApi = (
       fetchComments();
     }
   };
+
+  useEffect(() => {
+    if (!initialise || !useScrollLoad || !scrollElem) {
+      return;
+    }
+
+    scrollElem.onscroll = throttle(scrollLoadComments, 1000, {
+      trailing: false
+    });
+  }, [scrollElem, initialise, useScrollLoad]);
 
   useEffect(() => {
     if (!initialise) {
@@ -97,7 +96,6 @@ const useCommentApi = (
       fetching = current;
       return current;
     });
-
     if (fetching) {
       return;
     }
@@ -109,7 +107,6 @@ const useCommentApi = (
       })) as AxiosResponse<CommentResponse[]>;
 
       setComments(stateComments => [...stateComments, ...response.data]);
-      setFetchingComments(false);
 
       if (!response.data.length) {
         setAllCommentsLoaded(true);

@@ -13,17 +13,20 @@ import { currentUserActions } from "../../../store/currentUser/actions";
 import useNotification from "../../_Shared/notifications";
 import { NotificationType } from "../../_Shared/notifications/types";
 
-const PostPane: React.FC = () => {
+interface Props {
+  post: FullPost;
+}
+
+const PostPane: React.FC<Props> = ({ post, ...props }) => {
   const currentUser = useSelector(getCurrentUserSelector);
   const userSubs = useSelector(getUserSubsSelector);
-  const post = useSelector(getCurrentPageSelector).obj as FullPost;
   const { notify } = useNotification();
   const [subbed, setSubbed] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     setSubbed(userSubs.posts.hasOwnProperty(post.id));
-  }, [userSubs.posts]);
+  }, [userSubs.posts, post.id]);
 
   const handleJoinClick = async () => {
     try {

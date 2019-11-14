@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import Axios, { AxiosResponse } from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -114,7 +114,7 @@ const Group: React.FC<Props> = props => {
 
       {showPost && postId && (
         <PostModal isOpen={showPost} toggle={toggleShowPost}>
-          <Post postId={postId} />
+          <Post postId={postId} groupName={groupName} />
         </PostModal>
       )}
     </div>

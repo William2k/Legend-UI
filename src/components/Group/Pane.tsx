@@ -25,7 +25,7 @@ const GroupPane: React.FC = () => {
 
   useEffect(() => {
     setSubbed(userSubs.groups.includes(group.name));
-  }, [userSubs.groups]);
+  }, [userSubs.groups, group.name]);
 
   const toggleShowAddPost = () => {
     setShowAddPost(!showAddPost);

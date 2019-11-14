@@ -16,7 +16,6 @@ import { currentUserActions } from "../store/currentUser/actions";
 import Group from "./Group";
 import { useConfig } from "../global/config";
 import GroupsViewer from "./Group/GroupsViewer";
-import Post from "./Group/Post";
 
 Axios.defaults.baseURL = useConfig.apiBaseURL;
 

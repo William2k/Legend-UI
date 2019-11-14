@@ -1,13 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import TrendingGroupsPane from "./TrendingGroupsPane";
 import RecentPostsPane from "./RecentPostsPane";
 import MainPane from "./MainPane";
 import styles from "./index.module.scss";
-import { useSelector } from "react-redux";
 import { getCurrentPageSelector } from "../../store/page/selector";
 import { PageEnum } from "../../store/page/types";
-import PostPane from "../Group/Post/Pane";
 import GroupPane from "../Group/Pane";
 
 const MainPanel: React.FC = () => {
