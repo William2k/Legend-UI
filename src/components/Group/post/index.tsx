@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import styles from "./index.module.scss";
@@ -8,25 +8,58 @@ import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 import useCommentApi from "./Comment/useCommentApi";
 import PostPane from "./Pane";
 import { FullPost } from "../../../global/models/post-models";
+import styled from "styled-components";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import { backgroundColours } from "../../../global/colours";
 
 interface Props {
   postId: number;
   groupName: string;
+  showPost: boolean;
+  toggleShowPost: () => void;
 }
 
-const Post: React.FC<Props> = ({ postId, groupName, ...props }) => {
-  const currentUser = useSelector(getCurrentUserSelector);
-  const postContainer = useRef({} as HTMLDivElement);
+const PostModal = styled(Modal)`
+  max-width: 90%;
 
-  const elems = useMemo(() => {
-    if (postContainer.current.closest) {
-      const scrollElem = postContainer.current.closest(".modal") as HTMLElement;
-      const contentElem = scrollElem.querySelector(
-        ".modal-content"
-      ) as HTMLElement;
-      return { scrollElem, contentElem };
+  .modal-content {
+    padding: 10px;
+    border-radius: 15px;
+    background-color: ${backgroundColours.blue};
+  }
+`;
+
+const Post: React.FC<Props> = ({
+  postId,
+  groupName,
+  showPost,
+  toggleShowPost,
+  ...props
+}) => {
+  const currentUser = useSelector(getCurrentUserSelector);
+
+  const [elems, setElems] = useState({
+    scrollElem: {} as HTMLElement,
+    contentElem: {} as HTMLElement
+  });
+
+  useEffect(() => {
+    setTimeout(() => updateElems(), 1);
+  }, []);
+
+  const updateElems = () => {
+    const scrollElem = document.querySelector(".modal") as HTMLElement;
+
+    if (!scrollElem) {
+      return;
     }
-  }, [postContainer.current]);
+
+    const contentElem = scrollElem.querySelector(
+      ".modal-content"
+    ) as HTMLElement;
+
+    setElems({ scrollElem, contentElem });
+  };
 
   const {
     postComment,
@@ -40,8 +73,7 @@ const Post: React.FC<Props> = ({ postId, groupName, ...props }) => {
   } = useCommentApi(
     postId,
     elems && elems.scrollElem,
-    elems && elems.contentElem,
-    !!postContainer.current.closest
+    elems && elems.contentElem
   );
 
   const fullPost = { ...post, groupName } as FullPost;
@@ -67,37 +99,42 @@ const Post: React.FC<Props> = ({ postId, groupName, ...props }) => {
   };
 
   return (
-    <div className={styles.postContainer} ref={postContainer}>
-      <main>
-        <h1>{post.name}</h1>
-        <p>{post.content}</p>
-        {showMessageBox && currentUser.isLoggedIn && (
-          <div className={styles.textBox}>
-            <textarea
-              className="w-100"
-              value={commentText}
-              onChange={handleCommentChange}
-            />
-            <button
-              className="btn btn-light w-100"
-              onClick={handleCommentSubmit}
-            >
-              {fetchingComments ? "Loading Comments" : "Submit"}
-            </button>
-          </div>
-        )}
-        <div className={styles.commentsContainer}>
-          <CommentList
-            comments={comments}
-            addComment={handleAddComment}
-            getChildComments={getChildComments}
-          />
+    <PostModal isOpen={showPost} toggle={toggleShowPost}>
+      <ModalHeader toggle={toggleShowPost}>{post.content}</ModalHeader>
+      <ModalBody>
+        <div className={styles.postContainer}>
+          <main>
+            <h1>{post.name}</h1>
+            <p>{post.content}</p>
+            {showMessageBox && currentUser.isLoggedIn && (
+              <div className={styles.textBox}>
+                <textarea
+                  className="w-100"
+                  value={commentText}
+                  onChange={handleCommentChange}
+                />
+                <button
+                  className="btn btn-light w-100"
+                  onClick={handleCommentSubmit}
+                >
+                  {fetchingComments ? "Loading Comments" : "Submit"}
+                </button>
+              </div>
+            )}
+            <div className={styles.commentsContainer}>
+              <CommentList
+                comments={comments}
+                addComment={handleAddComment}
+                getChildComments={getChildComments}
+              />
+            </div>
+          </main>
+          <article>
+            <PostPane post={fullPost} />
+          </article>
         </div>
-      </main>
-      <article>
-        <PostPane post={fullPost} />
-      </article>
-    </div>
+      </ModalBody>
+    </PostModal>
   );
 };
 

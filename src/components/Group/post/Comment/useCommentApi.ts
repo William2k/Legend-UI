@@ -18,7 +18,7 @@ const useCommentApi = (
   scrollElem: HTMLElement = document.documentElement,
   contentElem: HTMLElement = document.documentElement,
   initialise = true,
-  useScrollLoad = true
+  useScrollLoad = false
 ) => {
   const user = useSelector(getUserSelector);
   const [allCommentsLoaded, setAllCommentsLoaded] = useState(false);
@@ -122,7 +122,13 @@ const useCommentApi = (
       setPagination(pagination);
 
       generateFlattenedComments(response.data);
-      useScrollLoad ? scrollLoadComments() : fetchComments();
+
+      if (useScrollLoad) {
+        scrollLoadComments();
+      } else {
+        setFetchingComments(false);
+        fetchComments();
+      }
     } catch (error) {
       notify(
         "Error loading",

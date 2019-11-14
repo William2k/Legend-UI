@@ -19,16 +19,6 @@ interface MatchParams {
   postId: string;
 }
 
-const PostModal = styled(Modal)`
-  max-width: 90%;
-
-  .modal-content {
-    padding: 10px;
-    border-radius: 15px;
-    background-color: ${backgroundColours.blue};
-  }
-`;
-
 interface Props extends RouteComponentProps<MatchParams> {}
 
 const Group: React.FC<Props> = props => {
@@ -113,9 +103,12 @@ const Group: React.FC<Props> = props => {
       <PostList groupName={groupName} posts={posts} openPost={openPost} />
 
       {showPost && postId && (
-        <PostModal isOpen={showPost} toggle={toggleShowPost}>
-          <Post postId={postId} groupName={groupName} />
-        </PostModal>
+        <Post
+          postId={postId}
+          groupName={groupName}
+          showPost={showPost}
+          toggleShowPost={toggleShowPost}
+        />
       )}
     </div>
   );
