@@ -142,12 +142,13 @@ const useCommentApi = (
 
   const getChildComments = async (
     parent: number,
-    maxLevel: number = pagination.maxLevel
+    maxLevel: number = pagination.maxLevel,
+    asc: boolean = !pagination.asc
   ) => {
     try {
       setFetchingComments(true);
       const response = (await Axios.get(`comment/${parent}`, {
-        params: { maxLevel }
+        params: { maxLevel, asc }
       })) as AxiosResponse<CommentResponse>;
 
       addChildComments(response.data);
