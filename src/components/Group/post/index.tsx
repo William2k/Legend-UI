@@ -17,15 +17,45 @@ interface Props {
   groupName: string;
   showPost: boolean;
   toggleShowPost: () => void;
+  updatePosts: (post: FullPost) => void;
 }
 
 const PostModal = styled(Modal)`
+  margin-top: 50px;
   max-width: 90%;
 
+  .modal-header {
+    position: fixed;
+    width: 100%;
+    background-color: black;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    padding-right: 35px;
+    animation: customFadeIn 1s;
+  }
+
   .modal-content {
-    padding: 10px;
     border-radius: 15px;
     background-color: ${backgroundColours.blue};
+  }
+
+  .close {
+    color: bisque;
+  }
+
+  @keyframes customFadeIn {
+    0% {
+      opacity: 0;
+    }
+    60% {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
@@ -34,6 +64,7 @@ const Post: React.FC<Props> = ({
   groupName,
   showPost,
   toggleShowPost,
+  updatePosts,
   ...props
 }) => {
   const currentUser = useSelector(getCurrentUserSelector);
@@ -73,7 +104,8 @@ const Post: React.FC<Props> = ({
     comments,
     post,
     showMessageBox,
-    fetchingComments
+    fetchingComments,
+    updateApiPost
   } = useCommentApi(
     postId,
     elems && elems.scrollElem,
@@ -102,9 +134,14 @@ const Post: React.FC<Props> = ({
     postComment(comment);
   };
 
+  const updatePostData = (post: FullPost) => {
+    updateApiPost({...post});
+    updatePosts(post);
+  }
+
   return (
     <PostModal isOpen={showPost} toggle={toggleShowPost}>
-      <ModalHeader toggle={toggleShowPost}>{post.content}</ModalHeader>
+      <ModalHeader toggle={toggleShowPost}>{post.name}</ModalHeader>
       <ModalBody>
         <div className={styles.postContainer} ref={postContainer}>
           <main>
@@ -134,7 +171,7 @@ const Post: React.FC<Props> = ({
             </div>
           </main>
           <article>
-            <PostPane post={fullPost} />
+            <PostPane post={fullPost} updatePosts={updatePostData} />
           </article>
         </div>
       </ModalBody>

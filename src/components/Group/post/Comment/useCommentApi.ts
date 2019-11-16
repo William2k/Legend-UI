@@ -250,6 +250,10 @@ const useCommentApi = (
     );
   };
 
+  const updateApiPost = (post: PostResponse) => {
+    setPost({...post});
+  }
+
   return {
     post,
     getChildComments,
@@ -259,7 +263,8 @@ const useCommentApi = (
     comments,
     postComment,
     fetchingComments,
-    showMessageBox
+    showMessageBox,
+    updateApiPost
   };
 };
 

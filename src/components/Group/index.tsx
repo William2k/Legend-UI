@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Modal } from "reactstrap";
 
 import { GroupResponse } from "../../global/models/group-models";
-import { PostResponse, PostPagination } from "../../global/models/post-models";
+import { PostResponse, PostPagination, FullPost } from "../../global/models/post-models";
 import PostList from "./Post/List";
 import { pageActions } from "../../store/page/actions";
 import { CurrentPage, PageEnum } from "../../store/page/types";
@@ -93,6 +93,16 @@ const Group: React.FC<Props> = props => {
     setShowPost(!showPost);
   };
 
+  const updatePosts = (post: FullPost) => {
+    const currentPost = posts.find(p => p.id === post.id) as FullPost;
+    
+    currentPost.commentsCount = post.commentsCount;
+    currentPost.commentsTodayCount = post.commentsTodayCount;
+    currentPost.subscriberCount = post.subscriberCount;
+
+    setPosts([...posts]);
+  }
+
   return (
     <div>
       <div>
@@ -106,6 +116,7 @@ const Group: React.FC<Props> = props => {
         <Post
           postId={postId}
           groupName={groupName}
+          updatePosts={updatePosts}
           showPost={showPost}
           toggleShowPost={toggleShowPost}
         />

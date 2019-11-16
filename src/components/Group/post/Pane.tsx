@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 
 import { FullPost } from "../../../global/models/post-models";
 import { getCurrentPageSelector } from "../../../store/page/selector";
@@ -15,9 +15,10 @@ import { NotificationType } from "../../_Shared/notifications/types";
 
 interface Props {
   post: FullPost;
+  updatePosts: (post: FullPost) => void;
 }
 
-const PostPane: React.FC<Props> = ({ post, ...props }) => {
+const PostPane: React.FC<Props> = ({ post, updatePosts, ...props }) => {
   const currentUser = useSelector(getCurrentUserSelector);
   const userSubs = useSelector(getUserSubsSelector);
   const { notify } = useNotification();
@@ -30,15 +31,19 @@ const PostPane: React.FC<Props> = ({ post, ...props }) => {
 
   const handleJoinClick = async () => {
     try {
-      await (subbed
+      const response = await (subbed
         ? Axios.delete(`post/${post.id}/unsubscribe`, {
             params: { group: post.groupName }
           })
         : Axios.post(`post/${post.id}/subscribe`, null, {
             params: { group: post.groupName }
-          }));
+          })) as AxiosResponse<number>;
+
+          post.subscriberCount = response.data;
 
       dispatch(currentUserActions.getSubscribedPosts());
+
+      updatePosts(post);
     } catch (error) {
       notify("Post Error", "Failed to follow post", NotificationType.Danger);
     }

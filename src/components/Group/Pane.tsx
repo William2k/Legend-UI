@@ -9,10 +9,12 @@ import {
   getCurrentUserSelector,
   getUserSubsSelector
 } from "../../store/currentUser/selectors";
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 import { currentUserActions } from "../../store/currentUser/actions";
 import useNotification from "../_Shared/notifications";
 import { NotificationType } from "../_Shared/notifications/types";
+import { pageActions } from "../../store/page/actions";
+import { PageEnum, CurrentPage } from "../../store/page/types";
 
 const GroupPane: React.FC = () => {
   const currentUser = useSelector(getCurrentUserSelector);
@@ -40,11 +42,22 @@ const GroupPane: React.FC = () => {
 
   const handleJoinClick = async () => {
     try {
-      await (subbed
+      const response = await (subbed
         ? Axios.delete(`group/${group.name}/unsubscribe`)
-        : Axios.post(`group/${group.name}/subscribe`));
+        : Axios.post(`group/${group.name}/subscribe`)) as AxiosResponse<number>;
 
       dispatch(currentUserActions.getSubscribedGroups());
+
+      group.subscriberCount = response.data;
+
+      const currentPage = {
+        page: PageEnum.Group,
+        obj: group,
+        navText: `g/${group.name}`
+      } as CurrentPage;
+
+      dispatch(pageActions.setCurrentPage(currentPage))
+
     } catch (error) {
       notify("Group Error", "Failed to subscribe to group", NotificationType.Danger);
     }
