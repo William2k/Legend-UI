@@ -31,15 +31,15 @@ const PostPane: React.FC<Props> = ({ post, updatePosts, ...props }) => {
 
   const handleJoinClick = async () => {
     try {
-      const response = await (subbed
+      const response = (await (subbed
         ? Axios.delete(`post/${post.id}/unsubscribe`, {
             params: { group: post.groupName }
           })
         : Axios.post(`post/${post.id}/subscribe`, null, {
             params: { group: post.groupName }
-          })) as AxiosResponse<number>;
+          }))) as AxiosResponse<number>;
 
-          post.subscriberCount = response.data;
+      post.subscriberCount = response.data;
 
       dispatch(currentUserActions.getSubscribedPosts());
 

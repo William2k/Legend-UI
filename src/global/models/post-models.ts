@@ -3,6 +3,7 @@ export interface PostResponse {
   name: string;
   content: string;
   isActive: boolean;
+  likes: number;
   commentsCount: number;
   subscriberCount: number;
   commentsTodayCount: number;

@@ -11,6 +11,8 @@ import { FullPost } from "../../../global/models/post-models";
 import styled from "styled-components";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { backgroundColours } from "../../../global/colours";
+import { Likes } from "../../_Shared/miniComponents";
+import Axios, { AxiosResponse } from "axios";
 
 interface Props {
   postId: number;
@@ -105,7 +107,8 @@ const Post: React.FC<Props> = ({
     post,
     showMessageBox,
     fetchingComments,
-    updateApiPost
+    updateApiPost,
+    updateComments
   } = useCommentApi(
     postId,
     elems && elems.scrollElem,
@@ -135,13 +138,37 @@ const Post: React.FC<Props> = ({
   };
 
   const updatePostData = (post: FullPost) => {
-    updateApiPost({...post});
+    updateApiPost({ ...post });
     updatePosts(post);
-  }
+  };
+
+  const handleLikeIncreaseClick = async () => {
+    const response = (await Axios.post(
+      `post/${post.id}/like`
+    )) as AxiosResponse<number>;
+
+    post.likes = response.data;
+    updatePosts({ ...post, groupName });
+  };
+  const handleLikeDecreaseClick = async () => {
+    const response = (await Axios.delete(
+      `post/${post.id}/unlike`
+    )) as AxiosResponse<number>;
+
+    post.likes = response.data;
+    updatePosts({ ...post, groupName });
+  };
 
   return (
     <PostModal isOpen={showPost} toggle={toggleShowPost}>
-      <ModalHeader toggle={toggleShowPost}>{post.name}</ModalHeader>
+      <ModalHeader toggle={toggleShowPost}>
+        <Likes
+          likes={post.likes}
+          increaseClick={handleLikeIncreaseClick}
+          decreaseClick={handleLikeDecreaseClick}
+        />{" "}
+        {post.name}
+      </ModalHeader>
       <ModalBody>
         <div className={styles.postContainer} ref={postContainer}>
           <main>
@@ -167,6 +194,7 @@ const Post: React.FC<Props> = ({
                 comments={comments}
                 addComment={handleAddComment}
                 getChildComments={getChildComments}
+                updateComments={updateComments}
               />
             </div>
           </main>

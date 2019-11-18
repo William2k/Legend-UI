@@ -1,11 +1,11 @@
 export interface CommentResponse {
     id: number;
     content: string;
+    likes: number;
     isActive: boolean;
     dateCreated: string;
     dateModified: string;
     creator: string;
-    level: number;
     comments: CommentResponse[];
 }
 

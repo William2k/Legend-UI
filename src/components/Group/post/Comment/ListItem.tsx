@@ -9,17 +9,21 @@ import { useSelector } from "react-redux";
 import { getCurrentUserSelector } from "../../../../store/currentUser/selectors";
 import { dateDiff } from "../../../../global/helpers";
 import CommentList from "./List";
+import { Likes } from "../../../_Shared/miniComponents";
+import Axios, { AxiosResponse } from "axios";
 
 interface Props {
   comment: CommentResponse;
   addComment: (comment: AddComment) => void;
   getChildComments: (parent: number, maxLevel?: number) => void;
+  updateComments: (comment: CommentResponse) => void;
 }
 
 const CommentListItem: React.FC<Props> = ({
   comment,
   addComment,
   getChildComments,
+  updateComments,
   ...props
 }) => {
   const [showMessageBox, setShowMessageBox] = useState(false);
@@ -92,12 +96,34 @@ const CommentListItem: React.FC<Props> = ({
     getChildComments(comment.id);
   };
 
+  const handleLikeIncreaseClick = async () => {
+    const response = (await Axios.post(
+      `comment/${comment.id}/like`
+    )) as AxiosResponse<number>;
+
+    comment.likes = response.data;
+    updateComments(comment);
+  };
+
+  const handleLikeDecreaseClick = async () => {
+    const response = (await Axios.delete(
+      `comment/${comment.id}/unlike`
+    )) as AxiosResponse<number>;
+
+    comment.likes = response.data;
+    updateComments(comment);
+  };
+
   return (
     <li className={styles.item}>
-      <div>
+      <div className={styles.commentHeader}>
+        <Likes
+          likes={comment.likes}
+          increaseClick={handleLikeIncreaseClick}
+          decreaseClick={handleLikeDecreaseClick}
+        />{" "}
         <h6 className={styles.commentCreator}>{comment.creator}</h6>
         <sub>Posted </sub>
-
         <sub> {getPostDateLabel()}</sub>
       </div>
 
@@ -128,6 +154,7 @@ const CommentListItem: React.FC<Props> = ({
           comments={comment.comments}
           addComment={addComment}
           getChildComments={getChildComments}
+          updateComments={updateComments}
         />
       ) : (
         <div>

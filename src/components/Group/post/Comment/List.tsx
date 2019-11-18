@@ -11,12 +11,14 @@ interface Props {
   comments: CommentResponse[];
   addComment: (comment: AddComment) => void;
   getChildComments: (parent: number, maxLevel?: number) => void;
+  updateComments: (comment: CommentResponse) => void;
 }
 
 const CommentList: React.FC<Props> = ({
   comments,
   addComment,
   getChildComments,
+  updateComments,
   ...props
 }) => {
   return (
@@ -28,6 +30,7 @@ const CommentList: React.FC<Props> = ({
             comment={comment}
             addComment={addComment}
             getChildComments={getChildComments}
+            updateComments={updateComments}
           />
         ))}
       </ul>

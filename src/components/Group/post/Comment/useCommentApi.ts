@@ -195,7 +195,7 @@ const useCommentApi = (
   ) => {
     const newArr = [] as CommentResponse[];
 
-    flattenComments(newComments, newArr);
+    flattenComments(newComments, newArr); // Should look to sorting these so binary search can be used instead of using "find"
     setFlatComments(flat => [...flat, ...newArr]);
   };
 
@@ -205,6 +205,7 @@ const useCommentApi = (
       content: addComment.content,
       isActive: true,
       dateCreated: new Date().toISOString(),
+      likes: 0,
       creator: user.username,
       dateModified: "",
       level: 0,
@@ -251,8 +252,20 @@ const useCommentApi = (
   };
 
   const updateApiPost = (post: PostResponse) => {
-    setPost({...post});
-  }
+    setPost({ ...post });
+  };
+
+  const updateComments = (comment: CommentResponse) => {
+    const currentComment = flatComments.find(c => c.id === comment.id);
+
+    if (!currentComment) {
+      return;
+    }
+
+    currentComment.likes = comment.likes;
+
+    setComments([...comments]);
+  };
 
   return {
     post,
@@ -264,7 +277,8 @@ const useCommentApi = (
     postComment,
     fetchingComments,
     showMessageBox,
-    updateApiPost
+    updateApiPost,
+    updateComments
   };
 };
 
