@@ -16,9 +16,18 @@ export const Spinner = () => {
 
 export const Likes: React.FC<{
   likes: number;
+  liked: boolean | null;
   increaseClick: () => void;
   decreaseClick: () => void;
-}> = ({ likes, increaseClick, decreaseClick }) => {
+  clickedAgain: () => void;
+}> = ({
+  likes,
+  increaseClick,
+  decreaseClick,
+  clickedAgain,
+  liked,
+  ...props
+}) => {
   const LikesElem = styled.div`
     display: inline-block;
     border-left: 1px solid white;
@@ -31,15 +40,25 @@ export const Likes: React.FC<{
     > i {
       cursor: pointer;
     }
+
+    .liked {
+      color: rgb(255, 50, 1);
+    }
   `;
 
   return (
     <LikesElem>
-      <i onClick={increaseClick}>
+      <i
+        className={liked === true ? "liked" : ""}
+        onClick={liked === true ? clickedAgain : increaseClick}
+      >
         <FontAwesomeIcon icon={faAngleUp} />
       </i>
       {likes}
-      <i onClick={decreaseClick}>
+      <i
+        className={liked === false ? "liked" : ""}
+        onClick={liked === false ? clickedAgain : decreaseClick}
+      >
         <FontAwesomeIcon icon={faAngleDown} />
       </i>
     </LikesElem>

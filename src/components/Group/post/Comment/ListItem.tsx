@@ -96,21 +96,26 @@ const CommentListItem: React.FC<Props> = ({
     getChildComments(comment.id);
   };
 
-  const handleLikeIncreaseClick = async () => {
-    const response = (await Axios.post(
-      `comment/${comment.id}/like`
+  const handleLikeIncreaseClick = () => commentLiked(true);
+  const handleLikeDecreaseClick = () => commentLiked(false);
+
+  const handleRemoveLikeClick = async () => {
+    const response = (await Axios.delete(
+      `comment/${comment.id}/likes`
     )) as AxiosResponse<number>;
 
     comment.likes = response.data;
+    comment.liked = null;
     updateComments(comment);
   };
 
-  const handleLikeDecreaseClick = async () => {
-    const response = (await Axios.delete(
-      `comment/${comment.id}/unlike`
-    )) as AxiosResponse<number>;
+  const commentLiked = async (liked: boolean) => {
+    const response = (await Axios.post(`comment/${comment.id}/likes`, null, {
+      params: { liked }
+    })) as AxiosResponse<number>;
 
     comment.likes = response.data;
+    comment.liked = liked;
     updateComments(comment);
   };
 
@@ -118,9 +123,11 @@ const CommentListItem: React.FC<Props> = ({
     <li className={styles.item}>
       <div className={styles.commentHeader}>
         <Likes
+          liked={comment.liked}
           likes={comment.likes}
           increaseClick={handleLikeIncreaseClick}
           decreaseClick={handleLikeDecreaseClick}
+          clickedAgain={handleRemoveLikeClick}
         />{" "}
         <h6 className={styles.commentCreator}>{comment.creator}</h6>
         <sub>Posted </sub>

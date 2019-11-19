@@ -206,6 +206,7 @@ const useCommentApi = (
       isActive: true,
       dateCreated: new Date().toISOString(),
       likes: 0,
+      liked: null,
       creator: user.username,
       dateModified: "",
       level: 0,

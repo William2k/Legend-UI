@@ -9,6 +9,7 @@ export interface PostResponse {
   commentsTodayCount: number;
   dateCreated: string;
   dateModified: string;
+  liked: boolean | null;
 }
 
 export interface FullPost extends PostResponse {

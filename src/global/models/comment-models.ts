@@ -7,6 +7,7 @@ export interface CommentResponse {
     dateModified: string;
     creator: string;
     comments: CommentResponse[];
+    liked: boolean | null;
 }
 
 export interface AddComment {

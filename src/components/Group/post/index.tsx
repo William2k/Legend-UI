@@ -142,20 +142,26 @@ const Post: React.FC<Props> = ({
     updatePosts(post);
   };
 
-  const handleLikeIncreaseClick = async () => {
-    const response = (await Axios.post(
-      `post/${post.id}/like`
-    )) as AxiosResponse<number>;
+  const handleLikeIncreaseClick = () => postLiked(true);
+  const handleLikeDecreaseClick = () => postLiked(false);
+
+  const postLiked = async (liked: boolean) => {
+    const response = (await Axios.post(`post/${post.id}/likes`, null, {
+      params: { liked }
+    })) as AxiosResponse<number>;
 
     post.likes = response.data;
+    post.liked = liked;
     updatePosts({ ...post, groupName });
   };
-  const handleLikeDecreaseClick = async () => {
+
+  const handleRemoveLikeClick = async () => {
     const response = (await Axios.delete(
-      `post/${post.id}/unlike`
+      `post/${post.id}/likes`
     )) as AxiosResponse<number>;
 
     post.likes = response.data;
+    post.liked = null;
     updatePosts({ ...post, groupName });
   };
 
@@ -163,9 +169,11 @@ const Post: React.FC<Props> = ({
     <PostModal isOpen={showPost} toggle={toggleShowPost}>
       <ModalHeader toggle={toggleShowPost}>
         <Likes
+          liked={post.liked}
           likes={post.likes}
           increaseClick={handleLikeIncreaseClick}
           decreaseClick={handleLikeDecreaseClick}
+          clickedAgain={handleRemoveLikeClick}
         />{" "}
         {post.name}
       </ModalHeader>
