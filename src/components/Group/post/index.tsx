@@ -11,7 +11,7 @@ import { FullPost } from "../../../global/models/post-models";
 import styled from "styled-components";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { backgroundColours } from "../../../global/colours";
-import { Likes } from "../../_Shared/miniComponents";
+import Likes from "../../_Shared/components/Likes";
 import Axios, { AxiosResponse } from "axios";
 
 interface Props {
@@ -169,6 +169,7 @@ const Post: React.FC<Props> = ({
     <PostModal isOpen={showPost} toggle={toggleShowPost}>
       <ModalHeader toggle={toggleShowPost}>
         <Likes
+          showLikeButtons={currentUser.isLoggedIn}
           liked={post.liked}
           likes={post.likes}
           increaseClick={handleLikeIncreaseClick}

@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { getCurrentUserSelector } from "../../../../store/currentUser/selectors";
 import { dateDiff } from "../../../../global/helpers";
 import CommentList from "./List";
-import { Likes } from "../../../_Shared/miniComponents";
+import Likes from "../../../_Shared/components/Likes";
 import Axios, { AxiosResponse } from "axios";
 
 interface Props {
@@ -123,6 +123,7 @@ const CommentListItem: React.FC<Props> = ({
     <li className={styles.item}>
       <div className={styles.commentHeader}>
         <Likes
+          showLikeButtons={currentUser.isLoggedIn}
           liked={comment.liked}
           likes={comment.likes}
           increaseClick={handleLikeIncreaseClick}
