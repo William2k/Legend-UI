@@ -12,6 +12,7 @@ import { PostResponse } from "../../../../global/models/post-models";
 import { getUserSelector } from "../../../../store/currentUser/selectors";
 import { NotificationType } from "../../../_Shared/notifications/types";
 import useNotification from "../../../_Shared/notifications";
+import { SortType } from "../../../../global/enums";
 
 const useCommentApi = (
   postId: number,
@@ -28,9 +29,11 @@ const useCommentApi = (
     post: postId,
     limit: 4,
     lastDateCreated: new Date(),
+    lastLikes: 0,
     initial: true,
     maxLevel: 4,
-    asc: false
+    asc: false,
+    sortType: SortType.Likes
   } as CommentPagination);
 
   const [post, setPost] = useState({
@@ -115,9 +118,21 @@ const useCommentApi = (
 
       pagination.initial = false;
 
-      pagination.lastDateCreated = new Date(
-        response.data.map(comment => comment.dateCreated).sort()[0]
-      );
+      const commentDates = response.data.map(comment => comment.dateCreated);
+      const commentLikes = response.data.map(comment => comment.likes);
+
+      if (pagination.asc) {
+        pagination.lastDateCreated = new Date(
+          commentDates.sort()[commentDates.length - 1]
+        );
+
+        pagination.lastLikes = commentLikes.sort()[commentLikes.length - 1];
+      } else {
+        pagination.lastDateCreated = new Date(commentDates.sort()[0]);
+        pagination.lastLikes = commentLikes.sort()[0];
+      }
+
+      console.log(pagination.lastLikes);
 
       setPagination(pagination);
 
