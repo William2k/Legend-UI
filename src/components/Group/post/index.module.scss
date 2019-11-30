@@ -17,3 +17,23 @@
     flex-basis: 35%;
   }
 }
+
+.sortContainer {
+  > i {
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.2s;
+
+    &:hover {
+      color: green;
+    }
+  }
+
+  > span {
+    font-weight: 300;
+  }
+}
+
+.sortSelected {
+  color: greenyellow;
+}

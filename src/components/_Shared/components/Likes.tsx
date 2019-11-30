@@ -14,6 +14,10 @@ const LikesElem = styled.div`
 
   > i {
     cursor: pointer;
+
+    &:hover{
+      color: rgb(255, 255, 1);
+    }
   }
 
   .liked {

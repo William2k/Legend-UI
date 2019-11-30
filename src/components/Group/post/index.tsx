@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import styled from "styled-components";
+import Axios, { AxiosResponse } from "axios";
 
 import styles from "./index.module.scss";
 import { AddComment } from "../../../global/models/comment-models";
@@ -8,11 +12,10 @@ import { getCurrentUserSelector } from "../../../store/currentUser/selectors";
 import useCommentApi from "./Comment/useCommentApi";
 import PostPane from "./Pane";
 import { FullPost } from "../../../global/models/post-models";
-import styled from "styled-components";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { backgroundColours } from "../../../global/colours";
 import Likes from "../../_Shared/components/Likes";
-import Axios, { AxiosResponse } from "axios";
+import { SortType } from "../../../global/enums";
 
 interface Props {
   postId: number;
@@ -34,6 +37,7 @@ const PostModal = styled(Modal)`
     left: 0;
     z-index: 1;
     padding-right: 35px;
+    padding-bottom: 0px;
     animation: customFadeIn 1s;
   }
 
@@ -108,7 +112,9 @@ const Post: React.FC<Props> = ({
     showMessageBox,
     fetchingComments,
     updateApiPost,
-    updateComments
+    updateComments,
+    pagination,
+    changeSorting
   } = useCommentApi(
     postId,
     elems && elems.scrollElem,
@@ -177,6 +183,23 @@ const Post: React.FC<Props> = ({
           clickedAgain={handleRemoveLikeClick}
         />{" "}
         {post.name}
+        <div className={styles.sortContainer}>
+          <span>Sorting by:</span>
+          <i
+            className={`${pagination.sortType === SortType.Date &&
+              styles.sortSelected}`}
+            onClick={() => changeSorting(SortType.Date)}
+          >
+            <FontAwesomeIcon icon={faCalendarAlt} />
+          </i>
+          <i
+            className={`${pagination.sortType === SortType.Likes &&
+              styles.sortSelected}`}
+            onClick={() => changeSorting(SortType.Likes)}
+          >
+            <FontAwesomeIcon icon={faThumbsUp} />
+          </i>
+        </div>
       </ModalHeader>
       <ModalBody>
         <div className={styles.postContainer} ref={postContainer}>

@@ -50,6 +50,57 @@ const useCommentApi = (
   const [fetchingComments, setFetchingComments] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(true);
 
+  const changeSorting = (
+    sortType = pagination.sortType,
+    asc = pagination.asc,
+    refetch = false
+  ) => {
+    if (pagination.sortType === sortType && pagination.asc === asc) {
+      pagination.asc = !asc;
+    } else {
+      pagination.asc = asc;
+    }
+
+    pagination.initial = true;
+    pagination.sortType = sortType;
+
+    setPagination({ ...pagination });
+
+    if (refetch || !allCommentsLoaded) {
+      setComments([]);
+      setAllCommentsLoaded(false);
+      fetchComments();
+    } else {
+      sortComments();
+    }
+  };
+
+  const sortComments = () => {
+    let sortFunc;
+
+    switch (pagination.sortType) {
+      case SortType.Date:
+        sortFunc = (a: CommentResponse, b: CommentResponse) => {
+          const aDate = new Date(a.dateCreated).valueOf();
+          const bDate = new Date(b.dateCreated).valueOf();
+
+          return pagination.asc ? aDate - bDate : bDate - aDate;
+        };
+        break;
+      case SortType.Likes:
+        sortFunc = (a: CommentResponse, b: CommentResponse) => {
+          return pagination.asc ? a.likes - b.likes : b.likes - a.likes;
+        };
+        break;
+      default:
+        return;
+    }
+
+    const sortedComments = [...comments].sort(sortFunc);
+
+    setComments(sortedComments);
+  };
+
   const scrollLoadComments = () => {
     let allLoaded = false;
     setAllCommentsLoaded(current => {
@@ -131,8 +182,6 @@ const useCommentApi = (
         pagination.lastDateCreated = new Date(commentDates.sort()[0]);
         pagination.lastLikes = commentLikes.sort()[0];
       }
-
-      console.log(pagination.lastLikes);
 
       setPagination(pagination);
 
@@ -294,7 +343,9 @@ const useCommentApi = (
     fetchingComments,
     showMessageBox,
     updateApiPost,
-    updateComments
+    updateComments,
+    pagination,
+    changeSorting
   };
 };
 
