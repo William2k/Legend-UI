@@ -32,7 +32,7 @@ const useCommentApi = (
     lastLikes: 0,
     initial: true,
     maxLevel: 4,
-    asc: false,
+    asc: true,
     sortType: SortType.Likes
   } as CommentPagination);
 
@@ -172,16 +172,10 @@ const useCommentApi = (
       const commentDates = response.data.map(comment => comment.dateCreated);
       const commentLikes = response.data.map(comment => comment.likes);
 
-      if (pagination.asc) {
-        pagination.lastDateCreated = new Date(
-          commentDates.sort()[commentDates.length - 1]
-        );
-
-        pagination.lastLikes = commentLikes.sort()[commentLikes.length - 1];
-      } else {
-        pagination.lastDateCreated = new Date(commentDates.sort()[0]);
-        pagination.lastLikes = commentLikes.sort()[0];
-      }
+      pagination.lastDateCreated = new Date(commentDates.sort()[0]);
+      pagination.lastLikes = commentLikes.sort()[
+        pagination.asc ? commentLikes.length - 1 : 0
+      ];
 
       setPagination(pagination);
 
