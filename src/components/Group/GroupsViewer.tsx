@@ -7,6 +7,7 @@ import GroupList from "./List";
 import Axios, { AxiosResponse } from "axios";
 import { useDispatch } from "react-redux";
 import { pageActions } from "../../store/page/actions";
+import { PageEnum, CurrentPage } from "../../store/page/types";
 
 const GroupsViewer: React.FC = () => {
   const [groups, setGroups] = useState([] as GroupResponse[]);
@@ -19,7 +20,12 @@ const GroupsViewer: React.FC = () => {
   } as GroupPagination);
 
   useEffect(() => {
-    dispatch(pageActions.removeCurrentPage());
+    const currentPage = {
+      page: PageEnum.Groups,
+      navText: ``
+    } as CurrentPage;
+
+    dispatch(pageActions.setCurrentPage(currentPage));
   }, [dispatch]);
 
   useEffect(() => {

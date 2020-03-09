@@ -7,7 +7,6 @@ export enum PageEnum {
   Comment,
   Post,
   Group,
-  Posts,
   Groups
 }
 

@@ -9,7 +9,6 @@ import {
   NavItem
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "react-notifications-component/dist/theme.css";
 import "animate.css";
 import { push } from "connected-react-router";
@@ -22,12 +21,12 @@ import {
   getUserSubsSelector
 } from "../../store/currentUser/selectors";
 import styles from "./index.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SignInModal from "../_Shared/modals/signin";
 import SignUpModal from "../_Shared/modals/signup";
 import useNotification from "../_Shared/notifications";
 import { NotificationType } from "../_Shared/notifications/types";
 import { getCurrentPageSelector } from "../../store/page/selector";
+import Search from "./search";
 
 const Navigation = styled.nav`
   z-index: 1000;
@@ -83,13 +82,8 @@ const Nav: React.FC = () => {
   const currentPage = useSelector(getCurrentPageSelector);
   const userSubs = useSelector(getUserSubsSelector);
   const { notify } = useNotification();
-  const searchInput = useRef(null);
 
   const [modal, setModal] = useState(NavModals.None);
-
-  const search = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
 
   const logout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -188,12 +182,7 @@ const Nav: React.FC = () => {
             </>
           )}
         </ul>
-        <form onSubmit={search}>
-          <input type="search" ref={searchInput} />
-          <button type="submit">
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-          </button>
-        </form>
+        <Search/>
         {currentUser.isLoggedIn && (
           <LoggedIn className="list-unstyled">
             <UncontrolledDropdown nav inNavbar>

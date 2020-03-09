@@ -32,7 +32,7 @@ const useCommentApi = (
     lastLikes: 0,
     initial: true,
     maxLevel: 4,
-    asc: true,
+    asc: false,
     sortType: SortType.Likes
   } as CommentPagination);
 
