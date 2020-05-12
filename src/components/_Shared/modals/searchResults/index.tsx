@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, NavLink } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  NavLink,
+} from "reactstrap";
 
 import styles from "./index.module.scss";
 import { PageEnum } from "../../../../store/page/types";
-import { PostResponse } from "../../../../global/models/post-models";
+import { FullPost } from "../../../../global/models/post-models";
 import { GroupResponse } from "../../../../global/models/group-models";
+import PostResult from "./post-result";
+import GroupResult from "./group-result";
 
 interface Props {
   showModal: boolean;
@@ -17,7 +26,7 @@ export interface SearchModel {
   obj: {};
 }
 
-const SearchResults: React.FC<Props> = props => {
+const SearchResults: React.FC<Props> = (props) => {
   return (
     <Modal
       className={styles.searchContainer}
@@ -31,11 +40,9 @@ const SearchResults: React.FC<Props> = props => {
             {props.results.map((v, i) => {
               switch (v.page) {
                 case PageEnum.Post:
-                  const post = v.obj as PostResponse;
-                  return <li key={i}> {post.name}</li>;
+                  return <PostResult key={i} post={v.obj as FullPost} />;
                 case PageEnum.Group:
-                  const group = v.obj as GroupResponse;
-                  return <li key={i}> {group.name}</li>;
+                  return <GroupResult key={i} group={v.obj as GroupResponse} />;
               }
             })}
           </ul>

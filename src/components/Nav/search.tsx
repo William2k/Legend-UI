@@ -7,9 +7,10 @@ import Axios, { AxiosResponse } from "axios";
 import useNotification from "../_Shared/notifications";
 import { getCurrentPageSelector } from "../../store/page/selector";
 import { PageEnum } from "../../store/page/types";
-import { PostResponse } from "../../global/models/post-models";
+import { PostResponse, FullPost } from "../../global/models/post-models";
 import { NotificationType } from "../_Shared/notifications/types";
 import SearchResults, { SearchModel } from "../_Shared/modals/searchResults";
+import { GroupResponse } from "../../global/models/group-models";
 
 const Search: React.FC = () => {
   const currentPage = useSelector(getCurrentPageSelector);
@@ -45,12 +46,19 @@ const Search: React.FC = () => {
     try {
       const response = (await Axios.get(searchUrl, {
         params: { term: searchTerm }
-      })) as AxiosResponse<PostResponse[]>;
+      })) as AxiosResponse<any[]>;
 
-      const searches = response.data.map(v => { return {page: PageEnum.Post, obj: v} as SearchModel;});
+      if(currentPage.page == PageEnum.Group) {
+        const group = currentPage.obj as GroupResponse;
+
+        response.data.forEach(v => (v as FullPost).groupName = group.name);
+      }
+
+      const searches = response.data.map(v => { return {page: currentPage.page == PageEnum.Group ? PageEnum.Post : PageEnum.Group, obj: v} as SearchModel;});
     
       setSearchResults(searches);
       setShowSearchResults(true);
+      setSearchTerm("");
     } catch (error) {
       console.log(error);
     }
