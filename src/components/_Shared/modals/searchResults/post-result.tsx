@@ -3,6 +3,7 @@ import { push } from "connected-react-router";
 import { useDispatch } from "react-redux";
 
 import { FullPost } from "../../../../global/models/post-models";
+import styles from "./post-result.module.scss";
 
 interface Props {
   post: FullPost;
@@ -15,7 +16,7 @@ const PostResult: React.FC<Props> = ({ post, ...props }) => {
     dispatch(push(`/g/${post.groupName}/${post.id}`));
   };
 
-  return <li onClick={open}> {post.name}</li>;
+  return <li className={styles.postResultContainer} onClick={open}> {post.name}</li>;
 };
 
 export default PostResult;
